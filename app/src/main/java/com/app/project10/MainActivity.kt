@@ -20,8 +20,8 @@ import com.app.project10.ui.navigation.Home
 import com.app.project10.ui.navigation.Saved
 import com.app.project10.ui.navigation.TOP_LEVEL_ROUTES
 import com.app.project10.ui.navigation.TopLevelBackStack
-import com.app.project10.ui.screens.HomeScreen
-import com.app.project10.ui.screens.SavedScreen
+import com.app.project10.ui.screens.home.MainScreen
+import com.app.project10.ui.screens.saved.SavedScreen
 import com.app.project10.ui.theme.Project10Theme
 
 class MainActivity : ComponentActivity() {
@@ -58,13 +58,13 @@ fun App() {
                 )
             }
         }
-    }) { _ ->
+    }) { paddingValues ->
         NavDisplay(
             backStack = topLevelBackStack.backStack,
             onBack = { topLevelBackStack.removeLast() },
             entryProvider = entryProvider {
                 entry<Home> {
-                    HomeScreen()
+                    MainScreen(innerPadding = paddingValues)
                 }
                 entry<Saved> {
                     SavedScreen()

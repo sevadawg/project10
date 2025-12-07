@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.koin.androidx.compose)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.navigation)
     implementation(libs.converter.gson)

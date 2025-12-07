@@ -1,10 +1,9 @@
 package com.app.project10.data.repository
 
 import com.app.project10.data.models.GamesResponse
-import com.app.project10.network.base.Error
-import com.app.project10.network.base.Result
+import kotlinx.coroutines.flow.Flow
 
 
 interface TodayGamesRepository {
-    suspend fun getTodayGames(todayDate: String): Result<List<GamesResponse>, Error>
+    fun getTodayGames(todayDate: String): Flow<List<GamesResponse>>
 }
