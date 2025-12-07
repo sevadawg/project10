@@ -1,4 +1,4 @@
-package com.app.project10.navigation
+package com.app.project10.ui.navigation
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf

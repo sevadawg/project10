@@ -16,10 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
-import com.app.project10.navigation.Home
-import com.app.project10.navigation.Saved
-import com.app.project10.navigation.TOP_LEVEL_ROUTES
-import com.app.project10.navigation.TopLevelBackStack
+import com.app.project10.ui.navigation.Home
+import com.app.project10.ui.navigation.Saved
+import com.app.project10.ui.navigation.TOP_LEVEL_ROUTES
+import com.app.project10.ui.navigation.TopLevelBackStack
 import com.app.project10.ui.screens.HomeScreen
 import com.app.project10.ui.screens.SavedScreen
 import com.app.project10.ui.theme.Project10Theme

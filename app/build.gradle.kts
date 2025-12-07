@@ -42,7 +42,15 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.navigation)
+    implementation(libs.converter.gson)
+    implementation(libs.converter.simplexml)
+    implementation(libs.gson)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.tls)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.core.ktx)
