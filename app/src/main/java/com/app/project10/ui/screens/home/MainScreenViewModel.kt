@@ -1,8 +1,9 @@
 package com.app.project10.ui.screens.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.project10.data.models.Game
+import com.app.project10.data.dto.Game
 import com.app.project10.data.repository.TodayGamesRepository
 import com.app.project10.utils.TimeUtils.todayDate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,8 +40,12 @@ class MainScreenViewModel(private val todayGamesRepository: TodayGamesRepository
         games,
         input
     ) { games, input ->
+
+        Log.d("Efsefsef", ": success : " + games)
         MainScreenState.DisplayingGames(games, input) as MainScreenState
     }.catch {
+
+        Log.d("Efsefsef", ": error : " + it.message)
         emit(MainScreenState.DisplayingError(it.message ?: "Unknown error"))
     }.stateIn(
         scope = viewModelScope,

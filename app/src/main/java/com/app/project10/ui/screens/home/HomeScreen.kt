@@ -24,7 +24,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.app.project10.data.models.Game
+import com.app.project10.data.dto.Game
+
 import com.app.project10.ui.components.calendar.SingleLineCalendar
 import com.app.project10.ui.components.state.Content
 import com.app.project10.ui.components.state.Error
@@ -104,12 +105,12 @@ private fun GamesList(games: List<Game>, onItemClicked: (Game) -> Unit) {
             GameCard(
                 modifier = Modifier.padding(bottom = 8.dp),
                 itemIndex = index,
-                leftTeamName = game.teams.home?.name.toString(),
-                rightTeamName = game.teams.away?.name.toString(),
-                leftScore = game.scores.home?.total ?: 0,
-                rightScore = game.scores.away?.total ?: 0,
-                gameTime = game.time.toString(),
-                gameStatus = game.status.short ?: "TBD"
+                leftTeamName = game.teams.home.name ?: "Team A",
+                rightTeamName = game.teams.visitors.name ?: "Team B",
+                leftScore = game.scores.home.points,
+                rightScore = game.scores.visitors.points,
+                gameTime = game.date.start?.substring(11, 16) ?: "--:--",
+                gameStatus = game.status.long ?: "TBD"
             ) {
                 onItemClicked(games[index])
             }

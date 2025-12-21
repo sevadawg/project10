@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.app.project10.data.models.Game
+import com.app.project10.data.dto.Game
 import com.app.project10.utils.TeamStats
 
 @Composable
@@ -32,21 +33,20 @@ fun GameScreen(
     game: Game,
     onBack: () -> Unit
 ) {
-    val game by remember { mutableStateOf<Game>(game) }
-
     GameStat(modifier = modifier.padding(paddings), game = game)
 }
 
 @Composable
 private fun GameStat(modifier: Modifier = Modifier, game: Game) {
-    ScoreboardPanel(modifier = modifier, game = game)
 
-    Spacer(Modifier.height(16.dp))
+    Column(modifier = modifier.fillMaxSize()) {
+        ScoreboardPanel(modifier = modifier, game = game)
 
-//    TeamComparisonPanel(
-//        home = game.homeStats,
-//        away = game.awayStats
-//    )
+        TeamComparisonPanel(
+            home = TeamStats(2, 4, 5, 6, 7),
+            away = TeamStats(5, 6, 7, 8, 9)
+        )
+    }
 }
 
 @Composable

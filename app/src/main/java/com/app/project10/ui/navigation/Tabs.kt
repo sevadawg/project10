@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.app.project10.R
-import com.app.project10.data.models.Game
+import com.app.project10.data.dto.Game
 
 sealed interface TopLevelRoute {
     val icon: Int

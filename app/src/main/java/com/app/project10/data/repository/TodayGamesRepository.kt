@@ -1,6 +1,7 @@
 package com.app.project10.data.repository
 
-import com.app.project10.data.models.Game
+import com.app.project10.data.dto.Game
+
 
 
 interface TodayGamesRepository {

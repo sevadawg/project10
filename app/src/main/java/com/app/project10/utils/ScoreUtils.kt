@@ -1,14 +1,6 @@
 package com.app.project10.utils
 
-import com.app.project10.data.models.Game
-
-fun Game.toStatsHome() {
-    val score = TeamStats()
-
-    with(score) {
-
-    }
-}
+import com.app.project10.data.dto.Game
 
 data class TeamStats(
     val rebounds: Int = 0,
