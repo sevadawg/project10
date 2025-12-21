@@ -6,7 +6,7 @@ data class GamesModel(
     @SerializedName("get") var get: String? = null,
     @SerializedName("parameters") var parameters: GamesParameters? = GamesParameters(),
     @SerializedName("results") var results: Int? = null,
-    @SerializedName("response") var response: ArrayList<GamesResponse> = arrayListOf(),
+    @SerializedName("response") var response: ArrayList<Game> = arrayListOf(),
     @SerializedName("errors") var errors: List<String>
 ) {
     companion object {

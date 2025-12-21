@@ -1,10 +1,8 @@
 package com.app.project10.data.repository
 
-import com.app.project10.data.models.GamesResponse
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.app.project10.data.models.Game
 
 
 interface TodayGamesRepository {
-    suspend fun getTodayGames(todayDate: String): List<GamesResponse>
+    suspend fun getTodayGames(todayDate: String): List<Game>
 }

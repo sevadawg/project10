@@ -2,7 +2,7 @@ package com.app.project10.data.models
 
 import com.app.nbanow.data.models.GamesStatus
 
-data class GamesResponse(
+data class Game(
     val id: Int? = null,
     val date: String? = null,
     val time: String? = null,

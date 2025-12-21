@@ -2,12 +2,13 @@ package com.app.project10.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.project10.data.models.GamesResponse
+import com.app.project10.data.models.Game
 import com.app.project10.data.repository.TodayGamesRepository
 import com.app.project10.utils.TimeUtils.todayDate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -16,7 +17,7 @@ import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 
 sealed interface MainScreenState {
-    data class DisplayingGames(val todayGames: List<GamesResponse>, val input: String) :
+    data class DisplayingGames(val todayGames: List<Game>, val input: String) :
         MainScreenState
 
     object Loading : MainScreenState
@@ -38,7 +39,9 @@ class MainScreenViewModel(private val todayGamesRepository: TodayGamesRepository
         games,
         input
     ) { games, input ->
-        MainScreenState.DisplayingGames(games, input)
+        MainScreenState.DisplayingGames(games, input) as MainScreenState
+    }.catch {
+        emit(MainScreenState.DisplayingError(it.message ?: "Unknown error"))
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(

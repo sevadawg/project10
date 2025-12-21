@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.app.project10.R
+import com.app.project10.data.models.Game
 
 sealed interface TopLevelRoute {
     val icon: Int
@@ -20,6 +21,8 @@ object Saved : TopLevelRoute {
     override val icon: Int
         get() = R.drawable.ic_20
 }
+
+data class GameStatistics(val game: Game)
 
 val TOP_LEVEL_ROUTES: List<TopLevelRoute> = listOf(Home, Saved)
 

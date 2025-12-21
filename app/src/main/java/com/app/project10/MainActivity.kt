@@ -12,14 +12,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import com.app.project10.ui.navigation.GameStatistics
 import com.app.project10.ui.navigation.Home
 import com.app.project10.ui.navigation.Saved
 import com.app.project10.ui.navigation.TOP_LEVEL_ROUTES
 import com.app.project10.ui.navigation.TopLevelBackStack
+import com.app.project10.ui.screens.GameScreen
 import com.app.project10.ui.screens.home.MainScreen
 import com.app.project10.ui.screens.saved.SavedScreen
 import com.app.project10.ui.theme.Project10Theme
@@ -67,22 +68,24 @@ fun App() {
             onBack = { topLevelBackStack.removeLast() },
             entryProvider = entryProvider {
                 entry<Home> {
-                    MainScreen(innerPadding = paddingValues)
+                    MainScreen(innerPadding = paddingValues) { game ->
+                        topLevelBackStack.add(GameStatistics(game))
+                    }
                 }
                 entry<Saved> {
                     SavedScreen()
                 }
+                entry<GameStatistics> { params ->
+                    val game = params.game
+                    GameScreen(
+                        game = game,
+                        paddings = paddingValues,
+                        onBack = {
+                            topLevelBackStack.removeLast()
+                        }
+                    )
+                }
             }
         )
-
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Project10Theme {
-        App()
     }
 }
