@@ -5,36 +5,55 @@ import androidx.lifecycle.viewModelScope
 import com.app.project10.data.models.GamesResponse
 import com.app.project10.data.repository.TodayGamesRepository
 import com.app.project10.utils.TimeUtils.todayDate
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.update
+import java.time.LocalDate
 
 sealed interface MainScreenState {
-    data class DisplayingGames(val todayGames: List<GamesResponse>) : MainScreenState
+    data class DisplayingGames(val todayGames: List<GamesResponse>, val input: String) :
+        MainScreenState
+
     object Loading : MainScreenState
     data class DisplayingError(val error: String) : MainScreenState
 }
 
 class MainScreenViewModel(private val todayGamesRepository: TodayGamesRepository) : ViewModel() {
 
-    private val games = todayGamesRepository.getTodayGames(todayDate)
+    private val input = MutableStateFlow(todayDate)
 
-    val state: StateFlow<MainScreenState> = todayGamesRepository
-        .getTodayGames(todayDate)
-        .transform<List<GamesResponse>, MainScreenState> { gamesList ->
-            emit(MainScreenState.DisplayingGames(gamesList))
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val games = input.flatMapLatest { date ->
+        flow {
+            emit(todayGamesRepository.getTodayGames(date))
         }
-        .catch { e ->
-            emit(MainScreenState.DisplayingError(e.localizedMessage ?: "Unknown error"))
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(
-                stopTimeoutMillis = 1000,
-                replayExpirationMillis = 5000
-            ),
-            initialValue = MainScreenState.Loading
-        )
+    }
+
+    val state = combine(
+        games,
+        input
+    ) { games, input ->
+        MainScreenState.DisplayingGames(games, input)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(
+            stopTimeoutMillis = 1000,
+            replayExpirationMillis = 5000
+        ),
+        initialValue = MainScreenState.Loading
+    )
+
+    fun onDateChanged(newDate: LocalDate) {
+        val newDate = newDate.toString()
+        input.update { newDate }
+    }
+
+    fun onRefresh() {
+
+    }
 }

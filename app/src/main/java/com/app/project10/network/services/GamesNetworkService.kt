@@ -1,5 +1,6 @@
 package com.app.project10.network.services
 
+import android.util.Log
 import com.app.project10.data.models.GamesModel
 import com.app.project10.network.client.OkHttpClientProvider
 import retrofit2.Response
@@ -21,7 +22,7 @@ class GamesNetworkService (private val okHttpClientProvider: OkHttpClientProvide
             .build()
 
         val service = retro.create(GamesService::class.java)
-        return service.listOfTodayGames(NBA_LEAGUE_ID, todayDate)
+        return service.listOfTodayGames(NBA_LEAGUE_ID, todayDate = todayDate)
     }
 }
 

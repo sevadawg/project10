@@ -11,9 +11,10 @@ interface GamesService {
         "X-RapidAPI-Host: api-basketball.p.rapidapi.com",
         "X-RapidAPI-Key: 629096a94cmshe968509d3a9fbb0p188876jsn327d6c0066cc"
     )
-    @GET("games?season=2025-2026")
+    @GET("games")
     suspend fun listOfTodayGames(
         @Query("league") league: String,
-        @Query("date") todayDate: String
+        @Query("date") todayDate: String,
+        @Query("season") season: String = "2025-2026"
     ): Response<GamesModel>
 }
