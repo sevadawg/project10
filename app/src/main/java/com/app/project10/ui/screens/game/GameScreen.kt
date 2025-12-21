@@ -1,4 +1,4 @@
-package com.app.project10.ui.screens
+package com.app.project10.ui.screens.game
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +38,8 @@ fun GameScreen(
 
 @Composable
 private fun GameStat(modifier: Modifier = Modifier, game: Game) {
+
+    val game by remember { mutableStateOf(game) }
 
     Column(modifier = modifier.fillMaxSize()) {
         ScoreboardPanel(modifier = modifier, game = game)
