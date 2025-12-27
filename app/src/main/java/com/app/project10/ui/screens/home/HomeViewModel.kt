@@ -3,7 +3,7 @@ package com.app.project10.ui.screens.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.project10.data.dto.Game
-import com.app.project10.data.repository.GamesRepository
+import com.app.project10.data.repository.games.GamesRepository
 import com.app.project10.utils.TimeUtils.todayDate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,9 +1,9 @@
-package com.app.project10.data.repository
+package com.app.project10.data.repository.games
 
 import android.annotation.SuppressLint
 import com.app.project10.data.dto.Game
 
-import com.app.project10.network.services.GamesNetworkService
+import com.app.project10.network.services.games.GamesNetworkService
 
 class GamesRepositoryImpl(private val gamesNetworkService: GamesNetworkService) :
     GamesRepository {

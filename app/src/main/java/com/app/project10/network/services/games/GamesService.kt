@@ -1,4 +1,4 @@
-package com.app.project10.network.services
+package com.app.project10.network.services.games
 
 import com.app.project10.data.dto.GamesResponse
 import retrofit2.Response
