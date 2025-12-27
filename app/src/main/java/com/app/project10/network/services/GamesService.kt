@@ -13,5 +13,5 @@ interface GamesService {
         "x-rapidapi-key: 629096a94cmshe968509d3a9fbb0p188876jsn327d6c0066cc"
     )
     @GET("games")
-    suspend fun getTodayGames(@Query("date") date: String): Response<GamesResponse>
+    suspend fun getGames(@Query("date") date: String): Response<GamesResponse>
 }

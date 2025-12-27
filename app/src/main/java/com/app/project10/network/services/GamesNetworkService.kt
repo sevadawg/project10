@@ -19,7 +19,7 @@ class GamesNetworkService (private val okHttpClientProvider: OkHttpClientProvide
         service = retro.create(GamesService::class.java)
     }
 
-    suspend fun getTodayGames(todayDate: String): Response<GamesResponse> {
-        return service.getTodayGames(todayDate)
+    suspend fun getGames(date: String): Response<GamesResponse> {
+        return service.getGames(date)
     }
 }

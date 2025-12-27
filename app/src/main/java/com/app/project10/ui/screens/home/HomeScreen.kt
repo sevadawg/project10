@@ -25,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.app.project10.data.dto.Game
-
 import com.app.project10.ui.components.calendar.SingleLineCalendar
 import com.app.project10.ui.components.state.Content
 import com.app.project10.ui.components.state.Error
@@ -44,7 +43,7 @@ fun MainScreen(
     when (state) {
         is MainScreenState.DisplayingGames -> Content({
             GamesList(
-                games = (state as MainScreenState.DisplayingGames).todayGames,
+                games = (state as MainScreenState.DisplayingGames).games,
                 onDateChanged = { selectedDate ->
                     viewModel.onDateChanged(selectedDate)
                 },

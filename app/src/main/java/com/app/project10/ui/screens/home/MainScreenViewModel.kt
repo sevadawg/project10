@@ -1,10 +1,9 @@
 package com.app.project10.ui.screens.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.project10.data.dto.Game
-import com.app.project10.data.repository.TodayGamesRepository
+import com.app.project10.data.repository.GamesRepository
 import com.app.project10.utils.TimeUtils.todayDate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,21 +17,21 @@ import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 
 sealed interface MainScreenState {
-    data class DisplayingGames(val todayGames: List<Game>, val input: String) :
+    data class DisplayingGames(val games: List<Game>, val input: String) :
         MainScreenState
 
     object Loading : MainScreenState
     data class DisplayingError(val error: String) : MainScreenState
 }
 
-class MainScreenViewModel(private val todayGamesRepository: TodayGamesRepository) : ViewModel() {
+class MainScreenViewModel(private val gamesRepository: GamesRepository) : ViewModel() {
 
     private val input = MutableStateFlow(todayDate)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val games = input.flatMapLatest { date ->
         flow {
-            emit(todayGamesRepository.getTodayGames(date))
+            emit(gamesRepository.getGames(date))
         }
     }
 
@@ -41,11 +40,8 @@ class MainScreenViewModel(private val todayGamesRepository: TodayGamesRepository
         input
     ) { games, input ->
 
-        Log.d("Efsefsef", ": success : " + games)
         MainScreenState.DisplayingGames(games, input) as MainScreenState
     }.catch {
-
-        Log.d("Efsefsef", ": error : " + it.message)
         emit(MainScreenState.DisplayingError(it.message ?: "Unknown error"))
     }.stateIn(
         scope = viewModelScope,
@@ -62,6 +58,8 @@ class MainScreenViewModel(private val todayGamesRepository: TodayGamesRepository
     }
 
     fun onRefresh() {
-
+        input.update {
+            todayDate
+        }
     }
 }

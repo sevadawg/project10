@@ -1,7 +1,7 @@
 package com.app.project10.di
 
-import com.app.project10.data.repository.TodayGamesRepository
-import com.app.project10.data.repository.TodayGamesRepositoryImpl
+import com.app.project10.data.repository.GamesRepository
+import com.app.project10.data.repository.GamesRepositoryImpl
 import com.app.project10.network.client.OkHttpClientProvider
 import com.app.project10.network.interceptors.OfflineInterceptor
 import com.app.project10.network.interceptors.OnlineInterceptor
@@ -13,7 +13,7 @@ import org.koin.dsl.module
 
 val mainModule = module {
     factory { GamesNetworkService(get()) }
-    factory<TodayGamesRepository> { TodayGamesRepositoryImpl(get()) }
+    factory<GamesRepository> { GamesRepositoryImpl(get()) }
     factory { OfflineInterceptor(androidContext()) }
     factory { OnlineInterceptor() }
 
