@@ -1,7 +1,6 @@
 package com.app.project10.ui.screens.home
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,6 +15,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +29,7 @@ import com.app.project10.ui.components.calendar.SingleLineCalendar
 import com.app.project10.ui.components.state.Content
 import com.app.project10.ui.components.state.Error
 import com.app.project10.ui.components.state.Loading
+import com.app.project10.ui.theme.Dimens
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
 
@@ -44,12 +45,12 @@ fun MainScreen(
         is MainScreenState.DisplayingGames -> Content({
             GamesList(
                 games = (state as MainScreenState.DisplayingGames).games,
-                onDateChanged = { selectedDate ->
-                    viewModel.onDateChanged(selectedDate)
+                onDateChanged = {
+                    viewModel.onDateChanged(it)
                 },
                 innerPadding = innerPadding,
-                onItemClicked = { game ->
-                    onItemClicked(game)
+                onItemClicked = {
+                    onItemClicked(it)
                 }
             )
         })
@@ -75,11 +76,11 @@ private fun GamesList(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Header()
-        SingleLineCalendar { selectedDate ->
-            onDateChanged(selectedDate)
+        SingleLineCalendar {
+            onDateChanged(it)
         }
-        GamesList(games = games) { game ->
-            onItemClicked(game)
+        GamesList(games = games) {
+            onItemClicked(it)
         }
     }
 }
@@ -92,17 +93,16 @@ private fun Header() {
 @Composable
 private fun GamesList(games: List<Game>, onItemClicked: (Game) -> Unit) {
     val listState = rememberLazyListState()
-    var selectedIndex by remember { mutableStateOf<Int?>(null) }
 
     LazyColumn(
         state = listState,
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = Dimens.PaddingHorizontal)
     ) {
         itemsIndexed(games) { index, game ->
             GameCard(
-                modifier = Modifier.padding(bottom = 8.dp),
+                modifier = Modifier.padding(bottom = Dimens.PaddingSmall),
                 itemIndex = index,
                 leftTeamName = game.teams.home.name ?: "Team A",
                 rightTeamName = game.teams.visitors.name ?: "Team B",
@@ -132,14 +132,14 @@ fun GameCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(110.dp),
-        shape = RoundedCornerShape(16.dp),
+            .height(Dimens.GameCardHeight),
+        shape = RoundedCornerShape(Dimens.CardCornerRadius),
         onClick = onClick
     ) {
         Row(
             modifier = modifier
                 .fillMaxSize()
-                .padding(start = 16.dp, end = 0.dp)
+                .padding(start = Dimens.PaddingNormal, end = 0.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -150,25 +150,25 @@ fun GameCard(
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         modifier = Modifier
-                            .height(26.dp)
+                            .height(Dimens.TeamNameRowHeight)
                             .weight(4f), text = leftTeamName
                     )
                     Text(
                         modifier = Modifier
-                            .height(26.dp)
+                            .height(Dimens.TeamNameRowHeight)
                             .weight(1f), text = leftScore.toString()
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(Dimens.SpacerSmall))
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         modifier = Modifier
-                            .height(26.dp)
+                            .height(Dimens.TeamNameRowHeight)
                             .weight(4f), text = rightTeamName
                     )
                     Text(
                         modifier = Modifier
-                            .height(26.dp)
+                            .height(Dimens.TeamNameRowHeight)
                             .weight(1f), text = rightScore.toString()
                     )
                 }

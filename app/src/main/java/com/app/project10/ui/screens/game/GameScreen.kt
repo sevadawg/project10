@@ -20,12 +20,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.project10.data.dto.Game
 import com.app.project10.ui.components.state.Error
 import com.app.project10.ui.components.state.Loading
+import com.app.project10.ui.theme.Dimens
 import com.app.project10.utils.TeamStats
 import org.koin.androidx.compose.koinViewModel
 
@@ -36,8 +35,6 @@ fun GameScreen(
     game: Game,
     onBack: () -> Unit
 ) {
-    // Pass the initial game id to the ViewModel.
-    // The GameStat composable will then rely on the ViewModel's state as the source of truth.
     GameStat(modifier = modifier.padding(paddings), initialGameId = game.id)
 }
 
@@ -57,7 +54,7 @@ private fun GameStat(
         when (val currentState = state) {
             is GameScreenState.DisplayingGame -> {
                 ScoreboardPanel(game = currentState.game)
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(Dimens.SpacerSmall))
                 TeamComparisonPanel(
                     home = TeamStats(2, 4, 5, 6, 7), // Placeholder
                     away = TeamStats(5, 6, 7, 8, 9)  // Placeholder
@@ -79,22 +76,22 @@ fun TeamComparisonPanel(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color(0xFF0B1A3A))
-            .padding(12.dp)
+            .padding(Dimens.PaddingMedium)
     ) {
 
         Text(
             text = "TEAM COMPARISON",
             color = Color.Yellow,
-            fontSize = 16.sp,
+            fontSize = Dimens.FontSizeNormal,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(Dimens.PaddingMedium))
 
         ComparisonHeader()
 
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(Dimens.SpacerSmall))
 
         ComparisonRow(home.rebounds, "REBOUNDS", away.rebounds)
         ComparisonRow(home.assists, "ASSISTS", away.assists)
@@ -120,9 +117,8 @@ fun ComparisonHeader() {
 fun HeaderCell(text: String, align: Alignment.Horizontal) {
     Text(
         text = text,
-//        modifier = Modifier.weight(1f),
         color = Color.White,
-        fontSize = 12.sp,
+        fontSize = Dimens.FontSizeCaption,
         fontFamily = FontFamily.Monospace,
         textAlign = when (align) {
             Alignment.Start -> TextAlign.Start
@@ -141,7 +137,7 @@ fun ComparisonRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = Dimens.PaddingExtraSmall),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
@@ -154,7 +150,7 @@ fun ComparisonRow(
             text = label,
             modifier = Modifier.weight(1f),
             color = Color.Yellow,
-            fontSize = 14.sp,
+            fontSize = Dimens.FontSizeBody,
             textAlign = TextAlign.Center,
             fontFamily = FontFamily.Monospace
         )
@@ -173,9 +169,8 @@ fun StatValue(
 ) {
     Text(
         text = text,
-//        modifier = Modifier.weight(1f),
         color = Color.Red,
-        fontSize = 18.sp,
+        fontSize = Dimens.FontSizeMedium,
         fontWeight = FontWeight.Bold,
         textAlign = align,
         fontFamily = FontFamily.Monospace
@@ -191,19 +186,19 @@ fun ScoreboardPanel(
         modifier = modifier
             .fillMaxWidth()
             .background(Color(0xFF0B1A3A)) // dark blue
-            .padding(16.dp)
+            .padding(Dimens.PaddingNormal)
     ) {
 
         // ===== Header =====
         Text(
             text = "HOME OF THE TIGERS",
             color = Color.White,
-            fontSize = 20.sp,
+            fontSize = Dimens.FontSizeHeadline,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(Dimens.PaddingMedium))
 
         // ===== Main Row =====
         Row(
@@ -226,12 +221,12 @@ fun ScoreboardPanel(
                 // Time
                 Text(
                     text = "4:53",
-                    fontSize = 48.sp,
+                    fontSize = Dimens.FontSizeDisplay,
                     fontWeight = FontWeight.Bold,
                     color = Color.Yellow
                 )
 
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(Dimens.SpacerSmall))
 
                 // Home / Period / Guest
                 Row(
@@ -243,7 +238,7 @@ fun ScoreboardPanel(
                     TeamScore("GUEST", "18")
                 }
 
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(Dimens.PaddingMedium))
 
                 // Fouls
                 Row(
@@ -267,11 +262,11 @@ fun ScoreboardPanel(
 @Composable
 fun TeamScore(label: String, score: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(label, color = Color.White, fontSize = 14.sp)
+        Text(label, color = Color.White, fontSize = Dimens.FontSizeBody)
         Text(
             score,
             color = Color.Red,
-            fontSize = 36.sp,
+            fontSize = Dimens.FontSizeDisplaySmall,
             fontWeight = FontWeight.Bold
         )
     }
@@ -280,11 +275,11 @@ fun TeamScore(label: String, score: String) {
 @Composable
 fun Period(value: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("PERIOD", color = Color.White, fontSize = 14.sp)
+        Text("PERIOD", color = Color.White, fontSize = Dimens.FontSizeBody)
         Text(
             value,
             color = Color.Yellow,
-            fontSize = 32.sp,
+            fontSize = Dimens.FontSizeDisplaySmall,
             fontWeight = FontWeight.Bold
         )
     }
@@ -293,11 +288,11 @@ fun Period(value: String) {
 @Composable
 fun LabelValue(label: String, value: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(label, color = Color.White, fontSize = 12.sp)
+        Text(label, color = Color.White, fontSize = Dimens.FontSizeCaption)
         Text(
             value,
             color = Color.Red,
-            fontSize = 20.sp,
+            fontSize = Dimens.FontSizeHeadline,
             fontWeight = FontWeight.Bold
         )
     }
@@ -312,13 +307,13 @@ fun PlayerStatsColumn(
         modifier = modifier,
         horizontalAlignment = align
     ) {
-        Text("PLR  PTS", color = Color.White, fontSize = 12.sp)
+        Text("PLR  PTS", color = Color.White, fontSize = Dimens.FontSizeCaption)
 
         repeat(5) {
             Text(
                 text = "${it + 1}   ${listOf(2, 4, 6, 8, 0)[it]}",
                 color = Color.Red,
-                fontSize = 14.sp,
+                fontSize = Dimens.FontSizeBody,
                 fontFamily = FontFamily.Monospace
             )
         }

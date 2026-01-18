@@ -42,8 +42,8 @@ class MainScreenViewModel(private val gamesRepository: GamesRepository) : ViewMo
             emit(MainScreenState.Loading)
             val games = gamesRepository.getGames(date)
             emit(MainScreenState.DisplayingGames(games, date))
-        }.catch { e ->
-            emit(MainScreenState.DisplayingError(e.message ?: "Unknown error"))
+        }.catch { error ->
+            emit(MainScreenState.DisplayingError(error.message ?: "Unknown error"))
         }
     }.stateIn(
         scope = viewModelScope,
