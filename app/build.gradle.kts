@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.okhttp.tls)
     implementation(libs.retrofit)
     implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.converter.scalars)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.core.ktx)

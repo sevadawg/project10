@@ -1,5 +1,6 @@
 [versions]
 agp = "8.12.3"
+converterScalars = "3.0.0"
 koinAndroid = "4.1.1"
 koinAndroidxCompose = "4.1.1"
 koinAndroidxNavigation = "4.1.1"
@@ -29,6 +30,7 @@ navigationCompose = "2.9.6"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3Compose" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "navigation3Compose" }
+converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterScalars" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

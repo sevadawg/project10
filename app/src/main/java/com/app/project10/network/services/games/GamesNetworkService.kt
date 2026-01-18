@@ -16,6 +16,7 @@ class GamesNetworkService (private val okHttpClientProvider: OkHttpClientProvide
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClientProvider.getOkHttpClientBuilder())
             .build()
+
         service = retro.create(GamesService::class.java)
     }
 

@@ -12,9 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,8 +22,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.project10.data.dto.Game
+import com.app.project10.ui.components.state.Error
+import com.app.project10.ui.components.state.Loading
 import com.app.project10.utils.TeamStats
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun GameScreen(
@@ -33,23 +36,39 @@ fun GameScreen(
     game: Game,
     onBack: () -> Unit
 ) {
-    GameStat(modifier = modifier.padding(paddings), game = game)
+    // Pass the initial game id to the ViewModel.
+    // The GameStat composable will then rely on the ViewModel's state as the source of truth.
+    GameStat(modifier = modifier.padding(paddings), initialGameId = game.id)
 }
 
 @Composable
-private fun GameStat(modifier: Modifier = Modifier, game: Game) {
+private fun GameStat(
+    modifier: Modifier = Modifier,
+    initialGameId: Int,
+    viewModel: GameViewModel = koinViewModel()
+) {
+    LaunchedEffect(initialGameId) {
+        viewModel.setGameId(initialGameId)
+    }
 
-    val game by remember { mutableStateOf(game) }
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     Column(modifier = modifier.fillMaxSize()) {
-        ScoreboardPanel(modifier = modifier, game = game)
-
-        TeamComparisonPanel(
-            home = TeamStats(2, 4, 5, 6, 7),
-            away = TeamStats(5, 6, 7, 8, 9)
-        )
+        when (val currentState = state) {
+            is GameScreenState.DisplayingGame -> {
+                ScoreboardPanel(game = currentState.game)
+                Spacer(modifier = Modifier.height(8.dp))
+                TeamComparisonPanel(
+                    home = TeamStats(2, 4, 5, 6, 7), // Placeholder
+                    away = TeamStats(5, 6, 7, 8, 9)  // Placeholder
+                )
+            }
+            is GameScreenState.DisplayingError -> Error(onRefresh = viewModel::onRefresh)
+            is GameScreenState.Loading -> Loading()
+        }
     }
 }
+
 
 @Composable
 fun TeamComparisonPanel(
