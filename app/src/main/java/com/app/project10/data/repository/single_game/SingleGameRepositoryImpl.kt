@@ -1,6 +1,6 @@
 package com.app.project10.data.repository.single_game
 
-import com.app.project10.data.dto.Game
+import com.app.project10.data.dto.game.Game
 import com.app.project10.network.services.single_game.SingleGameNetworkService
 
 class SingleGameRepositoryImpl(private val singleGameNetworkService: SingleGameNetworkService) : SingleGameRepository {

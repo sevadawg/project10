@@ -1,7 +1,5 @@
 package com.app.project10.utils
 
-import com.app.project10.data.dto.Game
-
 data class TeamStats(
     val rebounds: Int = 0,
     val assists: Int = 0,

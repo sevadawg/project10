@@ -1,25 +1,17 @@
 package com.app.project10.network.services.single_game
 
-import com.app.project10.data.dto.Game
-import com.app.project10.network.client.OkHttpClientProvider
+import com.app.project10.data.dto.game.Game
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Headers
+import retrofit2.http.Query
 
-class SingleGameNetworkService(private val okHttpClientProvider: OkHttpClientProvider) {
+interface SingleGameNetworkService {
 
-    private val service: SingleGameService
-
-    init {
-        val retro = Retrofit.Builder()
-            .baseUrl("https://api-nba-v1.p.rapidapi.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClientProvider.getOkHttpClientBuilder())
-            .build()
-        service = retro.create(SingleGameService::class.java)
-    }
-
-    suspend fun getGame(id: Int): Response<Game> {
-        return service.getGame(id)
-    }
+    @Headers(
+        "x-rapidapi-host: api-nba-v1.p.rapidapi.com",
+        "x-rapidapi-key: 629096a94cmshe968509d3a9fbb0p188876jsn327d6c0066cc"
+    )
+    @GET("games")
+    suspend fun getGame(@Query(value = "id") id: Int): Response<Game>
 }

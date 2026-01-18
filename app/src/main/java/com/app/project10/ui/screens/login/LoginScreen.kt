@@ -10,24 +10,31 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.project10.R
 import com.app.project10.ui.theme.Dimens
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginScreen(
-    onSignInClick: () -> Unit
+    viewModel: LoginViewModel = koinViewModel(),
+    onLoginSuccess: (String) -> Unit
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -39,22 +46,55 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Welcome Back",
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "Sign in to continue",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.Gray
-            )
-            Spacer(modifier = Modifier.height(Dimens.SpacerLarge))
-            GoogleSignInButton(
-                onClick = onSignInClick
-            )
+            when (val state = uiState) {
+                is LoginScreenState.Idle -> {
+                    LoginContent(
+                        onSignInClick = {
+                            // In a real app, you'd get this from the Google Sign-In SDK
+                            viewModel.login("sample_google_id_token")
+                        }
+                    )
+                }
+                is LoginScreenState.Loading -> {
+                    CircularProgressIndicator()
+                }
+                is LoginScreenState.Success -> {
+                    // Navigate to the next screen
+                    onLoginSuccess(state.token)
+                }
+                is LoginScreenState.Error -> {
+                    LoginContent(
+                        onSignInClick = {
+                            viewModel.login("sample_google_id_token")
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(Dimens.SpacerNormal))
+                    Text(
+                        text = state.message,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
         }
     }
+}
+
+@Composable
+private fun LoginContent(onSignInClick: () -> Unit) {
+    Text(
+        text = "Welcome Back",
+        style = MaterialTheme.typography.headlineLarge,
+        fontWeight = FontWeight.Bold
+    )
+    Text(
+        text = "Sign in to continue",
+        style = MaterialTheme.typography.bodyLarge,
+        color = Color.Gray
+    )
+    Spacer(modifier = Modifier.height(Dimens.SpacerLarge))
+    GoogleSignInButton(
+        onClick = onSignInClick
+    )
 }
 
 @Composable
@@ -65,7 +105,7 @@ private fun GoogleSignInButton(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = Dimens.ButtonPaddingHorizontal),
+            .padding(horizontal = Dimens.PaddingHorizontal),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.White,
             contentColor = Color.Black
@@ -91,5 +131,5 @@ private fun GoogleSignInButton(
 @Preview(showBackground = true)
 @Composable
 private fun LoginScreenPreview() {
-    LoginScreen(onSignInClick = {})
+    LoginContent(onSignInClick = {})
 }

@@ -1,4 +1,4 @@
-package com.app.project10.data.dto
+package com.app.project10.data.dto.game
 
 import kotlinx.serialization.Serializable
 

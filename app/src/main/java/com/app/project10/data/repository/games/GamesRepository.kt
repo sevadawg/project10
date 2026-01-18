@@ -1,6 +1,6 @@
 package com.app.project10.data.repository.games
 
-import com.app.project10.data.dto.Game
+import com.app.project10.data.dto.game.Game
 
 
 

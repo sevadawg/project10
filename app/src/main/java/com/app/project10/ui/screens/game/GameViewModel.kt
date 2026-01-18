@@ -2,7 +2,7 @@ package com.app.project10.ui.screens.game
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.project10.data.dto.Game
+import com.app.project10.data.dto.game.Game
 import com.app.project10.data.repository.single_game.SingleGameRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
