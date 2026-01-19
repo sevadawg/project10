@@ -1,51 +1,54 @@
 package com.app.project10.di
 
 import com.app.project10.BuildConfig
-import com.app.project10.data.repository.user_preferences.UserPreferencesRepository
-import com.app.project10.network.client.OkHttpClientProvider
 import com.app.project10.network.interceptors.AuthInterceptor
-import com.app.project10.network.interceptors.OfflineInterceptor
-import com.app.project10.network.interceptors.OnlineInterceptor
+import com.app.project10.network.interceptors.RapidInterceptor
 import okhttp3.OkHttpClient
-import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 val networkModule = module {
-    // Provide UserPreferencesRepository
-    single { UserPreferencesRepository(androidContext()) }
 
-    // Provide Interceptors
-    factory { OfflineInterceptor(androidContext()) }
-    factory { OnlineInterceptor() }
-    factory { AuthInterceptor(get()) } // AuthInterceptor now gets UserPreferencesRepository
-
-    // Provide OkHttpClient
-    single<OkHttpClient> {
-        OkHttpClientProvider(
-            context = androidContext(),
-            offlineInterceptor = get(),
-            onlineInterceptor = get(),
-            authInterceptor = get()
-        ).getOkHttpClientBuilder()
+    // --- Client for RapidAPI Services (Games, SingleGame) ---
+    single<OkHttpClient>(named("RapidApiClient")) {
+        OkHttpClient.Builder()
+            .addInterceptor(RapidInterceptor())
+            // You can add other specific interceptors like logging here
+            .build()
     }
 
-    // Retrofit for Authentication
-    single<Retrofit>(named("LoginRetrofit")) {
+    single<Retrofit>(named("RapidApiRetrofit")) {
         Retrofit.Builder()
-            .baseUrl("https://your.auth.api.url/") // <-- TODO: REPLACE WITH AUTH URL
-            .client(get<OkHttpClient>())
+            .baseUrl(BuildConfig.BASE_URL)
+            .client(get(named("RapidApiClient")))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    // Retrofit for Games API
-    single<Retrofit>(named("GamesRetrofit")) {
+    // --- Default Client for Authenticated Services ---
+    single<OkHttpClient>(named("AuthenticatedClient")) {
+        OkHttpClient.Builder()
+            .addInterceptor(AuthInterceptor(get()))
+            .build()
+    }
+
+    single<Retrofit>(named("AuthenticatedRetrofit")) {
         Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
-            .client(get<OkHttpClient>())
+            .baseUrl("http://127.0.0.1:8080")
+            .client(get(named("AuthenticatedClient")))
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
+    }
+
+    // --- Default Retrofit Instance ---
+    // This Retrofit instance will be used by any service that doesn't request a named one.
+    // It will automatically use the default OkHttpClient with the AuthInterceptor.
+    single<Retrofit> {
+        Retrofit.Builder()
+            .client(get()) // Gets the default OkHttpClient
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

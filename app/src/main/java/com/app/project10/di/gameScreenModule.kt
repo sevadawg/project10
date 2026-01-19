@@ -5,6 +5,7 @@ import com.app.project10.data.repository.single_game.SingleGameRepositoryImpl
 import com.app.project10.network.services.single_game.SingleGameNetworkService
 import com.app.project10.ui.screens.game.GameViewModel
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
@@ -13,8 +14,7 @@ val gameScreenModule = module {
 
     viewModelOf(::GameViewModel)
 
-    // Provide SingleGameNetworkService using the 'GamesRetrofit' named qualifier
     factory<SingleGameNetworkService> {
-        get<Retrofit>(GamesRetrofit).create(SingleGameNetworkService::class.java)
+        get<Retrofit>(named("RapidApiRetrofit")).create(SingleGameNetworkService::class.java)
     }
 }

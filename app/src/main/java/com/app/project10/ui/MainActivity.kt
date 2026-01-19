@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun App() {
 
-    val topLevelBackStack = remember { TopLevelBackStack<Any>(Login) }
+    val topLevelBackStack = remember { TopLevelBackStack<Any>(Home) }
 
     BackHandler {
         topLevelBackStack.removeLast()
