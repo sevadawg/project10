@@ -31,6 +31,7 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.app.project10.BuildConfig
 import com.app.project10.R
 import com.app.project10.ui.theme.Dimens
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -65,22 +66,18 @@ fun LoginScreen(
             val onSignInClick: () -> Unit = {
                 coroutineScope.launch {
                     try {
-                        // 1. Create a GetGoogleIdOption
                         val googleIdOption = GetGoogleIdOption.Builder()
                             .setFilterByAuthorizedAccounts(false)
-                            .setServerClientId("526082133202-euqfmdtsk07gq9688e9pcn1gqckmd6nu.apps.googleusercontent.com") // Must be a web client ID
+                            .setServerClientId(BuildConfig.WEB_CLIENT_ID)
                             .build()
 
-                        // 2. Create a GetCredentialRequest
                         val request = GetCredentialRequest.Builder()
                             .addCredentialOption(googleIdOption)
                             .build()
 
-                        // 3. Call the Credential Manager
                         val result = credentialManager.getCredential(context = context, request = request)
                         val credential = result.credential
 
-                        // 4. Handle the result
                         if (credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
                             val idToken = GoogleIdTokenCredential.createFrom(credential.data).idToken
 

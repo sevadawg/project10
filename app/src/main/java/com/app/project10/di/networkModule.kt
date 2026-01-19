@@ -1,5 +1,6 @@
 package com.app.project10.di
 
+import com.app.project10.BuildConfig
 import com.app.project10.data.repository.user_preferences.UserPreferencesRepository
 import com.app.project10.network.client.OkHttpClientProvider
 import com.app.project10.network.interceptors.AuthInterceptor
@@ -43,7 +44,7 @@ val networkModule = module {
     // Retrofit for Games API
     single<Retrofit>(named("GamesRetrofit")) {
         Retrofit.Builder()
-            .baseUrl("https://api-nba-v1.p.rapidapi.com/")
+            .baseUrl(BuildConfig.BASE_URL)
             .client(get<OkHttpClient>())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
