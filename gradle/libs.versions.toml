@@ -1,6 +1,8 @@
 [versions]
 agp = "8.12.3"
 converterScalars = "3.0.0"
+credentials = "1.5.0"
+datastorePreferences = "1.2.0"
 koinAndroid = "4.1.1"
 koinAndroidxCompose = "4.1.1"
 koinAndroidxNavigation = "4.1.1"
@@ -25,9 +27,13 @@ koinAndroidxComposeVersion = "4.1.0"
 runtime = "1.10.0"
 roomKtx = "2.8.4"
 navigationCompose = "2.9.6"
+googleid = "1.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
+androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3Compose" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "navigation3Compose" }
 converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterScalars" }
@@ -59,6 +65,7 @@ gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 androidx-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtime" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 
 
 [plugins]

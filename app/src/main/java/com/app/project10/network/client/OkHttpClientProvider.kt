@@ -1,6 +1,7 @@
 package com.app.project10.network.client
 
 import android.content.Context
+import com.app.project10.network.interceptors.AuthInterceptor
 import com.app.project10.network.interceptors.OfflineInterceptor
 import com.app.project10.network.interceptors.OnlineInterceptor
 import okhttp3.Cache
@@ -9,7 +10,8 @@ import okhttp3.OkHttpClient
 class OkHttpClientProvider (
     private val context: Context,
     private val offlineInterceptor: OfflineInterceptor,
-    private val onlineInterceptor: OnlineInterceptor
+    private val onlineInterceptor: OnlineInterceptor,
+    private val authInterceptor: AuthInterceptor
 ) {
     fun getOkHttpClientBuilder(): OkHttpClient {
 
@@ -19,6 +21,7 @@ class OkHttpClientProvider (
         return OkHttpClient
             .Builder()
             .addInterceptor(offlineInterceptor)
+            .addInterceptor(authInterceptor)
             .addNetworkInterceptor(onlineInterceptor)
             .cache(cache)
             .build()

@@ -18,11 +18,13 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.app.project10.ui.navigation.GameStatistics
 import com.app.project10.ui.navigation.Home
+import com.app.project10.ui.navigation.Login
 import com.app.project10.ui.navigation.Saved
 import com.app.project10.ui.navigation.TOP_LEVEL_ROUTES
 import com.app.project10.ui.navigation.TopLevelBackStack
 import com.app.project10.ui.screens.game.GameScreen
 import com.app.project10.ui.screens.home.MainScreen
+import com.app.project10.ui.screens.login.LoginScreen
 import com.app.project10.ui.screens.saved.SavedScreen
 import com.app.project10.ui.theme.Project10Theme
 
@@ -41,7 +43,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun App() {
 
-    val topLevelBackStack = remember { TopLevelBackStack<Any>(Home) }
+    val topLevelBackStack = remember { TopLevelBackStack<Any>(Login) }
 
     BackHandler {
         topLevelBackStack.removeLast()
@@ -90,6 +92,11 @@ fun App() {
                             topLevelBackStack.removeLast()
                         }
                     )
+                }
+                entry<Login> {
+                    LoginScreen(onLoginSuccess = {
+
+                    })
                 }
             }
         )

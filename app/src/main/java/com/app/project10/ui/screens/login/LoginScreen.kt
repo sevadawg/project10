@@ -1,5 +1,6 @@
 package com.app.project10.ui.screens.login
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,16 +18,27 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.credentials.CredentialManager
+import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialRequest
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.project10.R
 import com.app.project10.ui.theme.Dimens
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+
+private const val TAG = "LoginScreen"
 
 @Composable
 fun LoginScreen(
@@ -34,6 +46,10 @@ fun LoginScreen(
     onLoginSuccess: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val credentialManager = remember { CredentialManager.create(context) }
+
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -46,28 +62,52 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val onSignInClick: () -> Unit = {
+                coroutineScope.launch {
+                    try {
+                        // 1. Create a GetGoogleIdOption
+                        val googleIdOption = GetGoogleIdOption.Builder()
+                            .setFilterByAuthorizedAccounts(false)
+                            .setServerClientId("526082133202-euqfmdtsk07gq9688e9pcn1gqckmd6nu.apps.googleusercontent.com") // Must be a web client ID
+                            .build()
+
+                        // 2. Create a GetCredentialRequest
+                        val request = GetCredentialRequest.Builder()
+                            .addCredentialOption(googleIdOption)
+                            .build()
+
+                        // 3. Call the Credential Manager
+                        val result = credentialManager.getCredential(context = context, request = request)
+                        val credential = result.credential
+
+                        // 4. Handle the result
+                        if (credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                            val idToken = GoogleIdTokenCredential.createFrom(credential.data).idToken
+
+                            viewModel.onGoogleSignInSucceeded(idToken)
+                        } else {
+                            Log.w(TAG, "Google Sign In failed: Unexpected credential type")
+                        }
+
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Google sign in failed", e)
+                    }
+                }
+            }
+
+
             when (val state = uiState) {
                 is LoginScreenState.Idle -> {
-                    LoginContent(
-                        onSignInClick = {
-                            // In a real app, you'd get this from the Google Sign-In SDK
-                            viewModel.login("sample_google_id_token")
-                        }
-                    )
+                    LoginContent(onSignInClick = onSignInClick)
                 }
                 is LoginScreenState.Loading -> {
                     CircularProgressIndicator()
                 }
                 is LoginScreenState.Success -> {
-                    // Navigate to the next screen
                     onLoginSuccess(state.token)
                 }
                 is LoginScreenState.Error -> {
-                    LoginContent(
-                        onSignInClick = {
-                            viewModel.login("sample_google_id_token")
-                        }
-                    )
+                    LoginContent(onSignInClick = onSignInClick)
                     Spacer(modifier = Modifier.height(Dimens.SpacerNormal))
                     Text(
                         text = state.message,

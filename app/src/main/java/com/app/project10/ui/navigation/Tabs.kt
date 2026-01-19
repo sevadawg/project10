@@ -24,6 +24,8 @@ object Saved : TopLevelRoute {
 
 data class GameStatistics(val game: Game)
 
+data object Login
+
 val TOP_LEVEL_ROUTES: List<TopLevelRoute> = listOf(Home, Saved)
 
 class TopLevelBackStack<T: Any>(startKey: T) {
