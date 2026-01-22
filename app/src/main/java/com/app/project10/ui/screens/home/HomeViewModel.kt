@@ -4,17 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.project10.data.dto.game.Game
 import com.app.project10.data.repository.games.GamesRepository
+import com.app.project10.utils.FlowState
 import com.app.project10.utils.TimeUtils.todayDate
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 
 sealed interface MainScreenState {
@@ -25,40 +17,31 @@ sealed interface MainScreenState {
 
 class MainScreenViewModel(private val gamesRepository: GamesRepository) : ViewModel() {
 
-    private val selectedDate = MutableStateFlow(todayDate)
-
-    private val refreshTrigger = MutableSharedFlow<Unit>(replay = 1).apply {
-        tryEmit(Unit)
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val state = combine(
-        selectedDate,
-        refreshTrigger
-    ) { date, _ ->
-        date
-    }.flatMapLatest { date ->
-        flow {
-            emit(MainScreenState.Loading)
-            val games = gamesRepository.getGames(date)
-            emit(MainScreenState.DisplayingGames(games, date))
-        }.catch { error ->
-            emit(MainScreenState.DisplayingError(error.message ?: "Unknown error"))
-        }
-    }.stateIn(
+    private val gamesState = FlowState<String, MainScreenState>(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(
-            stopTimeoutMillis = 1000,
-            replayExpirationMillis = 5000
-        ),
-        initialValue = MainScreenState.Loading
+        initialSourceValue = todayDate,
+        initialValue = MainScreenState.Loading,
+        fetcher = { date, _ -> // We ignore the second list of other sources for now
+            flow {
+                emit(MainScreenState.Loading)
+                try {
+                    val games = gamesRepository.getGames(date)
+                    emit(MainScreenState.DisplayingGames(games, date))
+                } catch (error: Exception) {
+                    emit(MainScreenState.DisplayingError(error.message ?: "Unknown error"))
+                }
+            }
+        }
     )
 
+    val state = gamesState.state
+
     fun onDateChanged(newDate: LocalDate) {
-        selectedDate.update { newDate.toString() }
+        gamesState.onInputChange(newDate.toString())
     }
 
     fun onRefresh() {
-        refreshTrigger.tryEmit(Unit)
+        gamesState.refresh()
     }
 }
+

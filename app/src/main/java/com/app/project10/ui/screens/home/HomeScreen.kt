@@ -28,7 +28,6 @@ import com.app.project10.ui.components.state.Error
 import com.app.project10.ui.components.state.Loading
 import com.app.project10.ui.theme.Dimens
 import org.koin.androidx.compose.koinViewModel
-import java.time.LocalDate
 
 @Composable
 fun MainScreen(
@@ -38,46 +37,25 @@ fun MainScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    when (state) {
-        is MainScreenState.DisplayingGames -> Content({
-            GamesList(
-                games = (state as MainScreenState.DisplayingGames).games,
-                onDateChanged = {
-                    viewModel.onDateChanged(it)
-                },
-                innerPadding = innerPadding,
-                onItemClicked = {
-                    onItemClicked(it)
-                }
-            )
-        })
-
-        is MainScreenState.Loading -> Loading()
-        is MainScreenState.DisplayingError -> Error(
-            onRefresh = viewModel::onRefresh
-        )
-    }
-}
-
-@Composable
-private fun GamesList(
-    games: List<Game>,
-    onDateChanged: (selectedDate: LocalDate) -> Unit,
-    innerPadding: PaddingValues,
-    onItemClicked: (Game) -> Unit
-) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.padding(innerPadding)
     ) {
         Header()
-        SingleLineCalendar {
-            onDateChanged(it)
+        SingleLineCalendar { date ->
+            viewModel.onDateChanged(date)
         }
-        GamesList(games = games) {
-            onItemClicked(it)
+        when (state) {
+            is MainScreenState.DisplayingGames -> Content({
+                val games = (state as MainScreenState.DisplayingGames).games
+                GamesList(games = games) { game ->
+                    onItemClicked(game)
+                }
+            })
+
+            is MainScreenState.Loading -> Loading()
+            is MainScreenState.DisplayingError -> Error(
+                onRefresh = viewModel::onRefresh
+            )
         }
     }
 }
