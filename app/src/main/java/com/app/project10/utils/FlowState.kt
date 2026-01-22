@@ -31,7 +31,8 @@ class FlowState<S, R>(
     initialSourceValue: S,
     otherSources: List<Flow<*>> = emptyList(), // Optional: for other triggers
     initialValue: R,
-    private val fetcher: suspend (S, List<*>) -> Flow<R>
+    private val fetcher: suspend (S, List<*>) -> Flow<R>,
+    private val onError: (Throwable) -> R
 ) {
     // 1. This is the new, internally managed StateFlow for the primary input.
     private val updatableSource = MutableStateFlow(initialSourceValue)
@@ -51,7 +52,7 @@ class FlowState<S, R>(
         // 3. Call the fetcher with the extracted values.
         fetcher(sourceValue, otherValues)
             .catch { error ->
-                //TODO add error handling
+                emit(onError(error))
             }
     }.stateIn(
         scope = scope,

@@ -31,6 +31,9 @@ class MainScreenViewModel(private val gamesRepository: GamesRepository) : ViewMo
                     emit(MainScreenState.DisplayingError(error.message ?: "Unknown error"))
                 }
             }
+        },
+        onError = { error ->
+            MainScreenState.DisplayingError(error.message ?: "Unknown error")
         }
     )
 
