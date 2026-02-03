@@ -1,4 +1,4 @@
-package com.app.project10.app
+package com.app.project10
 
 import android.app.Application
 import com.app.project10.di.mainModule

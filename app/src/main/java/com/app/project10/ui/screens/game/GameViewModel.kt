@@ -2,18 +2,10 @@ package com.app.project10.ui.screens.game
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.project10.core.state.flowState
 import com.app.project10.data.dto.game.Game
 import com.app.project10.data.repository.single_game.SingleGameRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
 
 sealed interface GameScreenState {
     data class DisplayingGame(val game: Game) : GameScreenState
@@ -24,37 +16,33 @@ sealed interface GameScreenState {
 class GameViewModel(private val gameRepository: SingleGameRepository) : ViewModel() {
 
     private val gameIdFlow = MutableStateFlow<Int?>(null)
-    private val refreshTrigger = MutableSharedFlow<Unit>(replay = 1)
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val state = combine(
-        gameIdFlow.filterNotNull(), // Don't start until we have an ID
-        refreshTrigger
-    ) { id, _ ->
-        id
-    }.flatMapLatest { id ->
-        flow {
-            emit(GameScreenState.Loading)
-            val game = gameRepository.getGame(id)
-            emit(GameScreenState.DisplayingGame(game))
-        }
-    }.catch {
-        emit(GameScreenState.DisplayingError(it.message ?: "Unknown error"))
-    }.stateIn(
+    val gameState = flowState(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = GameScreenState.Loading
-    )
+        initialInput = gameIdFlow.value
+    ) {
+        initial { GameScreenState.Loading }
 
-    fun setGameId(gameId: Int) {
-        // Set the ID and trigger the initial load
-        if (gameIdFlow.value == null) {
-            gameIdFlow.value = gameId
-            onRefresh()
+        debounce(300)
+
+        fetch { id ->
+            val game = gameRepository.getGame(id ?: -1)
+            GameScreenState.DisplayingGame(game.response[0])
+        }
+
+        onError { e ->
+            GameScreenState.DisplayingError(e.message ?: "Unknown error")
         }
     }
 
+    val state = gameState.state
+
+    fun setGameId(id: Int) {
+        gameState.update(id)
+    }
+
+
     fun onRefresh() {
-        refreshTrigger.tryEmit(Unit)
+        gameState.refresh()
     }
 }

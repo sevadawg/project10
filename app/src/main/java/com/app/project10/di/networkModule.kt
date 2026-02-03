@@ -16,7 +16,6 @@ val networkModule = module {
     single<OkHttpClient>(named("RapidApiClient")) {
         OkHttpClient.Builder()
             .addInterceptor(RapidInterceptor())
-            // You can add other specific interceptors like logging here
             .build()
     }
 
