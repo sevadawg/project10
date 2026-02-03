@@ -2,7 +2,7 @@ package com.app.project10.ui.screens.game
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.project10.core.state.flowState
+import com.app.project10.core.state.flowUiState
 import com.app.project10.data.dto.game.Game
 import com.app.project10.data.repository.single_game.SingleGameRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,23 +17,24 @@ class GameViewModel(private val gameRepository: SingleGameRepository) : ViewMode
 
     private val gameIdFlow = MutableStateFlow<Int?>(null)
 
-    val gameState = flowState(
+    val gameState = flowUiState(
         scope = viewModelScope,
-        initialInput = gameIdFlow.value
-    ) {
-        initial { GameScreenState.Loading }
+        initialInput = gameIdFlow.value,
+        builder = {
+            initial { GameScreenState.Loading }
 
-        debounce(300)
+            debounce(300)
 
-        fetch { id ->
-            val game = gameRepository.getGame(id ?: -1)
-            GameScreenState.DisplayingGame(game.response[0])
+            fetch { gameId ->
+                val game = gameRepository.getGame(gameId ?: -1)
+                GameScreenState.DisplayingGame(game.toGameResponse())
+            }
+
+            onError { e ->
+                GameScreenState.DisplayingError(e.message ?: "Unknown error")
+            }
         }
-
-        onError { e ->
-            GameScreenState.DisplayingError(e.message ?: "Unknown error")
-        }
-    }
+    )
 
     val state = gameState.state
 

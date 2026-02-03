@@ -2,7 +2,7 @@ package com.app.project10.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.project10.core.state.flowState
+import com.app.project10.core.state.flowUiState
 import com.app.project10.data.dto.game.Game
 import com.app.project10.data.repository.games.GamesRepository
 import com.app.project10.utils.TimeUtils.todayDate
@@ -16,7 +16,7 @@ sealed interface MainScreenState {
 
 class MainScreenViewModel(private val gamesRepository: GamesRepository) : ViewModel() {
 
-    private val gamesState = flowState(
+    private val gamesState = flowUiState(
         scope = viewModelScope,
         initialInput = todayDate
     ) {
@@ -27,6 +27,10 @@ class MainScreenViewModel(private val gamesRepository: GamesRepository) : ViewMo
         fetch { date ->
             val games = gamesRepository.getGames(date)
             MainScreenState.DisplayingGames(games, date)
+        }
+
+        onError { e ->
+            MainScreenState.DisplayingError(e.message ?: "Unknown error")
         }
     }
 
