@@ -21,11 +21,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.app.project10.core.utils.TeamStats
 import com.app.project10.data.dto.game.Game
 import com.app.project10.ui.components.state.Error
 import com.app.project10.ui.components.state.Loading
 import com.app.project10.ui.theme.Dimens
-import com.app.project10.utils.TeamStats
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

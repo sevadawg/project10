@@ -1,4 +1,4 @@
-package com.app.project10.utils
+package com.app.project10.core.utils
 
 import java.time.LocalDate
 

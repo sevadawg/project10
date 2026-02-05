@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import com.app.project10.R
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -26,9 +25,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.project10.R
+import com.app.project10.core.utils.TimeUtils.todayDateNow
 import com.app.project10.ui.theme.Pink80
 import com.app.project10.ui.theme.PurpleGrey80
-import com.app.project10.utils.TimeUtils.todayDateNow
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale

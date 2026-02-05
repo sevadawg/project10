@@ -1,4 +1,4 @@
-package com.app.project10.utils
+package com.app.project10.core.utils
 
 data class TeamStats(
     val rebounds: Int = 0,

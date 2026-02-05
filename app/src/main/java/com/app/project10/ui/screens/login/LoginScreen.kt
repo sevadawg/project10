@@ -44,7 +44,7 @@ private const val TAG = "LoginScreen"
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
-    onLoginSuccess: (String) -> Unit
+    onLoginSuccess: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -101,7 +101,7 @@ fun LoginScreen(
                     CircularProgressIndicator()
                 }
                 is LoginScreenState.Success -> {
-                    onLoginSuccess(state.token)
+                    onLoginSuccess()
                 }
                 is LoginScreenState.Error -> {
                     LoginContent(onSignInClick = onSignInClick)

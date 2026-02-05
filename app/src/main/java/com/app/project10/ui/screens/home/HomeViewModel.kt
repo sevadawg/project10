@@ -3,9 +3,9 @@ package com.app.project10.ui.screens.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.project10.core.state.flowUiState
+import com.app.project10.core.utils.TimeUtils.todayDate
 import com.app.project10.data.dto.game.Game
 import com.app.project10.data.repository.games.GamesRepository
-import com.app.project10.utils.TimeUtils.todayDate
 import java.time.LocalDate
 
 sealed interface MainScreenState {
