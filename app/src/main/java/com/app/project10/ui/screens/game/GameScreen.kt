@@ -1,6 +1,5 @@
 package com.app.project10.ui.screens.game
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,22 +9,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.app.project10.core.utils.TeamStats
 import com.app.project10.data.dto.game.Game
+import com.app.project10.data.dto.game.TeamDetails
 import com.app.project10.ui.components.state.Error
 import com.app.project10.ui.components.state.Loading
-import com.app.project10.ui.theme.Dimens
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -53,12 +50,7 @@ private fun GameStat(
     Column(modifier = modifier.fillMaxSize()) {
         when (val currentState = state) {
             is GameScreenState.DisplayingGame -> {
-                ScoreboardPanel(game = currentState.game)
-                Spacer(modifier = Modifier.height(Dimens.SpacerSmall))
-                TeamComparisonPanel(
-                    home = TeamStats(2, 4, 5, 6, 7), // Placeholder
-                    away = TeamStats(5, 6, 7, 8, 9)  // Placeholder
-                )
+                Stats(game = currentState.game)
             }
             is GameScreenState.DisplayingError -> Error(onRefresh = viewModel::onRefresh)
             is GameScreenState.Loading -> Loading()
@@ -67,254 +59,84 @@ private fun GameStat(
 }
 
 @Composable
-fun TeamComparisonPanel(
-    home: TeamStats,
-    away: TeamStats
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFF0B1A3A))
-            .padding(Dimens.PaddingMedium)
+fun Stats(game: Game, modifier: Modifier = Modifier) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-
-        Text(
-            text = "TEAM COMPARISON",
-            color = Color.Yellow,
-            fontSize = Dimens.FontSizeNormal,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-
-        Spacer(Modifier.height(Dimens.PaddingMedium))
-
-        ComparisonHeader()
-
-        Spacer(Modifier.height(Dimens.SpacerSmall))
-
-        ComparisonRow(home.rebounds, "REBOUNDS", away.rebounds)
-        ComparisonRow(home.assists, "ASSISTS", away.assists)
-        ComparisonRow(home.turnovers, "TURNOVERS", away.turnovers)
-        ComparisonRow("${home.fgPct}%", "FG %", "${away.fgPct}%")
-        ComparisonRow(home.threes, "3PT MADE", away.threes)
+        item { GameHeader(game = game) }
+        item { GameInfo(game = game) }
+        item { ScoreDetails(game = game) }
+        item { OfficialsAndStats(game = game) }
     }
 }
 
 @Composable
-fun ComparisonHeader() {
+fun GameHeader(game: Game) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        HeaderCell("HOME", Alignment.Start)
-        HeaderCell("STAT", Alignment.CenterHorizontally)
-        HeaderCell("AWAY", Alignment.End)
-    }
-}
-
-@Composable
-fun HeaderCell(text: String, align: Alignment.Horizontal) {
-    Text(
-        text = text,
-        color = Color.White,
-        fontSize = Dimens.FontSizeCaption,
-        fontFamily = FontFamily.Monospace,
-        textAlign = when (align) {
-            Alignment.Start -> TextAlign.Start
-            Alignment.End -> TextAlign.End
-            else -> TextAlign.Center
-        }
-    )
-}
-
-@Composable
-fun ComparisonRow(
-    homeValue: Any,
-    label: String,
-    awayValue: Any
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = Dimens.PaddingExtraSmall),
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-
-        StatValue(
-            text = homeValue.toString(),
-            align = TextAlign.Start
-        )
-
+        TeamColumn(team = game.teams.visitors, score = game.scores.visitors.points)
         Text(
-            text = label,
-            modifier = Modifier.weight(1f),
-            color = Color.Yellow,
-            fontSize = Dimens.FontSizeBody,
-            textAlign = TextAlign.Center,
-            fontFamily = FontFamily.Monospace
+            text = "${game.scores.home.points} - ${game.scores.visitors.points}",
+            style = MaterialTheme.typography.bodyLarge
         )
-
-        StatValue(
-            text = awayValue.toString(),
-            align = TextAlign.End
-        )
+        TeamColumn(team = game.teams.home, score = game.scores.home.points)
     }
 }
 
 @Composable
-fun StatValue(
-    text: String,
-    align: TextAlign
-) {
-    Text(
-        text = text,
-        color = Color.Red,
-        fontSize = Dimens.FontSizeMedium,
-        fontWeight = FontWeight.Bold,
-        textAlign = align,
-        fontFamily = FontFamily.Monospace
-    )
+fun TeamColumn(team: TeamDetails, score: Int) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Spacer(Modifier.height(4.dp))
+        Text(text = team.nickname ?: "", style = MaterialTheme.typography.bodySmall)
+        Text(text = "Score: $score", style = MaterialTheme.typography.bodyMedium)
+    }
 }
 
 @Composable
-fun ScoreboardPanel(
-    modifier: Modifier = Modifier,
-    game: Game
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(Color(0xFF0B1A3A)) // dark blue
-            .padding(Dimens.PaddingNormal)
-    ) {
-
-        // ===== Header =====
+fun GameInfo(game: Game) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "HOME OF THE TIGERS",
-            color = Color.White,
-            fontSize = Dimens.FontSizeHeadline,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            "Arena: ${game.arena.name}, ${game.arena.city}",
+            style = MaterialTheme.typography.bodySmall
         )
+        Text("Status: ${game.status.long}", style = MaterialTheme.typography.bodySmall)
+        Text(
+            "Period: ${game.periods.current}/${game.periods.total}",
+            style = MaterialTheme.typography.bodySmall
+        )
+        Text("Duration: ${game.date.duration}", style = MaterialTheme.typography.bodyMedium)
+    }
+}
 
-        Spacer(Modifier.height(Dimens.PaddingMedium))
-
-        // ===== Main Row =====
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            // ===== Left Player Stats =====
-            PlayerStatsColumn(
-                modifier = Modifier.weight(1f),
-                align = Alignment.Start
-            )
-
-            // ===== Center Score Area =====
-            Column(
-                modifier = Modifier.weight(3f),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                // Time
-                Text(
-                    text = "4:53",
-                    fontSize = Dimens.FontSizeDisplay,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Yellow
-                )
-
-                Spacer(Modifier.height(Dimens.SpacerSmall))
-
-                // Home / Period / Guest
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    TeamScore("HOME", "15")
-                    Period("3")
-                    TeamScore("GUEST", "18")
-                }
-
-                Spacer(Modifier.height(Dimens.PaddingMedium))
-
-                // Fouls
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    LabelValue("FOULS", "0")
-                    LabelValue("FOULS", "0")
-                }
+@Composable
+fun ScoreDetails(game: Game) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Line Scores:", style = MaterialTheme.typography.labelLarge)
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Column {
+                Text(game.teams.visitors.nickname ?: "")
+                game.scores.visitors.linescore.forEach { Text(it) }
             }
-
-            // ===== Right Player Stats =====
-            PlayerStatsColumn(
-                modifier = Modifier.weight(1f),
-                align = Alignment.End
-            )
+            Column {
+                Text(game.teams.home.nickname ?: "")
+                game.scores.home.linescore.forEach { Text(it) }
+            }
         }
     }
 }
 
 @Composable
-fun TeamScore(label: String, score: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(label, color = Color.White, fontSize = Dimens.FontSizeBody)
-        Text(
-            score,
-            color = Color.Red,
-            fontSize = Dimens.FontSizeDisplaySmall,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-@Composable
-fun Period(value: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("PERIOD", color = Color.White, fontSize = Dimens.FontSizeBody)
-        Text(
-            value,
-            color = Color.Yellow,
-            fontSize = Dimens.FontSizeDisplaySmall,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-@Composable
-fun LabelValue(label: String, value: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(label, color = Color.White, fontSize = Dimens.FontSizeCaption)
-        Text(
-            value,
-            color = Color.Red,
-            fontSize = Dimens.FontSizeHeadline,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-@Composable
-fun PlayerStatsColumn(
-    modifier: Modifier = Modifier,
-    align: Alignment.Horizontal
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = align
-    ) {
-        Text("PLR  PTS", color = Color.White, fontSize = Dimens.FontSizeCaption)
-
-        repeat(5) {
-            Text(
-                text = "${it + 1}   ${listOf(2, 4, 6, 8, 0)[it]}",
-                color = Color.Red,
-                fontSize = Dimens.FontSizeBody,
-                fontFamily = FontFamily.Monospace
-            )
-        }
+fun OfficialsAndStats(game: Game) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Officials: ${game.officials.joinToString(", ")}")
+        Text("Times Tied: ${game.timesTied}")
+        Text("Lead Changes: ${game.leadChanges}")
+        game.nugget?.let { Text("Nugget: $it") }
     }
 }
