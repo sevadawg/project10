@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,7 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.project10.BuildConfig
 import com.app.project10.R
 import com.app.project10.ui.theme.Dimens
@@ -46,7 +46,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
     onLoginSuccess: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val loginState by viewModel.state.collectAsState()
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val credentialManager = remember { CredentialManager.create(context) }
@@ -93,7 +93,7 @@ fun LoginScreen(
             }
 
 
-            when (val state = uiState) {
+            when (val state = loginState) {
                 is LoginScreenState.Idle -> {
                     LoginContent(onSignInClick = onSignInClick)
                 }

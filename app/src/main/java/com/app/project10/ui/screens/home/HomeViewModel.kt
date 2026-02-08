@@ -6,6 +6,7 @@ import com.app.project10.core.state.flowUiState
 import com.app.project10.core.utils.TimeUtils.todayDate
 import com.app.project10.data.dto.game.Game
 import com.app.project10.data.repository.games.GamesRepository
+import timber.log.Timber
 import java.time.LocalDate
 
 sealed interface MainScreenState {
@@ -30,6 +31,7 @@ class MainScreenViewModel(private val gamesRepository: GamesRepository) : ViewMo
         }
 
         onError { e ->
+            Timber.e(e)
             MainScreenState.DisplayingError(e.message ?: "Unknown error")
         }
     }

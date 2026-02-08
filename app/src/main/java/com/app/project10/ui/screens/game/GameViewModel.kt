@@ -6,6 +6,7 @@ import com.app.project10.core.state.flowUiState
 import com.app.project10.data.dto.game.Game
 import com.app.project10.data.repository.single_game.SingleGameRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import timber.log.Timber
 
 sealed interface GameScreenState {
     data class DisplayingGame(val game: Game) : GameScreenState
@@ -31,6 +32,7 @@ class GameViewModel(private val gameRepository: SingleGameRepository) : ViewMode
             }
 
             onError { e ->
+                Timber.e(e)
                 GameScreenState.DisplayingError(e.message ?: "Unknown error")
             }
         }

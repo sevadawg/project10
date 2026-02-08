@@ -11,9 +11,12 @@ import javax.crypto.spec.GCMParameterSpec
 object CryptoManager {
 
     private const val KEY_ALIAS = "auth_token_key"
+    private const val ANDROID_KEY_STORE = "AndroidKeyStore"
+    private const val CIPHER_TRANSFORMATION_KEY = "AES/GCM/NoPadding"
+    private const val GCM_TAG_LENGTH = 128
 
     private fun getKeyStore(): KeyStore =
-        KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+        KeyStore.getInstance(ANDROID_KEY_STORE).apply { load(null) }
 
     fun getOrCreateKey(): SecretKey {
         val keyStore = getKeyStore()
@@ -24,7 +27,7 @@ object CryptoManager {
 
         val keyGenerator = KeyGenerator.getInstance(
             KeyProperties.KEY_ALGORITHM_AES,
-            "AndroidKeyStore"
+            ANDROID_KEY_STORE
         )
 
         val spec = KeyGenParameterSpec.Builder(
@@ -41,7 +44,7 @@ object CryptoManager {
     }
 
     fun encrypt(text: String): Pair<ByteArray, ByteArray> {
-        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION_KEY)
         cipher.init(Cipher.ENCRYPT_MODE, getOrCreateKey())
         val iv = cipher.iv
         val encrypted = cipher.doFinal(text.toByteArray())
@@ -49,11 +52,11 @@ object CryptoManager {
     }
 
     fun decrypt(iv: ByteArray, data: ByteArray): String {
-        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION_KEY)
         cipher.init(
             Cipher.DECRYPT_MODE,
             getOrCreateKey(),
-            GCMParameterSpec(128, iv)
+            GCMParameterSpec(GCM_TAG_LENGTH, iv)
         )
         return String(cipher.doFinal(data))
     }

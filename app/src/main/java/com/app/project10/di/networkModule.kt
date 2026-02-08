@@ -8,7 +8,6 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 
 val networkModule = module {
 
@@ -36,9 +35,9 @@ val networkModule = module {
 
     single<Retrofit>(named("AuthenticatedRetrofit")) {
         Retrofit.Builder()
-            .baseUrl("http://127.0.0.1:8080")
+            .baseUrl("http://10.0.2.2:8080/") //  local Ktor
             .client(get(named("AuthenticatedClient")))
-            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
