@@ -66,7 +66,6 @@ private fun GameStat(
     }
 }
 
-
 @Composable
 fun TeamComparisonPanel(
     home: TeamStats,

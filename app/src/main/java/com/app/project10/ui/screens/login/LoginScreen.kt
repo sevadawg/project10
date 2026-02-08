@@ -51,7 +51,6 @@ fun LoginScreen(
     val coroutineScope = rememberCoroutineScope()
     val credentialManager = remember { CredentialManager.create(context) }
 
-
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
