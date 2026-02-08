@@ -1,6 +1,5 @@
 package com.app.project10.ui.screens.login
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,6 +37,7 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 
 private const val TAG = "LoginScreen"
 
@@ -82,11 +82,11 @@ fun LoginScreen(
 
                             viewModel.onGoogleSignInSucceeded(idToken)
                         } else {
-                            Log.w(TAG, "Google Sign In failed: Unexpected credential type")
+                            Timber.tag(TAG).w("Google Sign In failed: Unexpected credential type")
                         }
 
                     } catch (e: Exception) {
-                        Log.w(TAG, "Google sign in failed", e)
+                        Timber.tag(TAG).w(e, "Google sign in failed")
                     }
                 }
             }

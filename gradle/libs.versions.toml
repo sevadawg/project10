@@ -29,6 +29,7 @@ roomKtx = "2.8.4"
 navigationCompose = "2.9.6"
 googleid = "1.1.1"
 timber = "5.0.1"
+adsMobileSdk = "0.23.0-beta01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -68,6 +69,7 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+ads-mobile-sdk = { group = "com.google.android.libraries.ads.mobile.sdk", name = "ads-mobile-sdk", version.ref = "adsMobileSdk" }
 
 
 [plugins]

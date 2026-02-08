@@ -20,7 +20,7 @@ import com.app.project10.ui.screens.saved.SavedScreen
 @Composable
 fun Navigation() {
 
-    val topLevelBackStack = remember { TopLevelBackStack<Any>(Login) }
+    val topLevelBackStack = remember { TopLevelBackStack<Any>(Home) }
 
     BackHandler {
         topLevelBackStack.removeLast()
