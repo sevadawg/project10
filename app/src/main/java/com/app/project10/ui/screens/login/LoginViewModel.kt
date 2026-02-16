@@ -37,7 +37,7 @@ class LoginViewModel(
                 } else {
                     val response = loginRepository.login(idToken)
                     val jwt = response.jwt ?: ""
-                    userPreferencesRepository.saveAuthToken(jwt)
+                    userPreferencesRepository.saveAuthToken(jwt.trim())
                     LoginScreenState.Success
                 }
             }

@@ -63,6 +63,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.timber)
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.android)
@@ -94,6 +95,7 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.ads.mobile.sdk)
+    implementation(libs.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

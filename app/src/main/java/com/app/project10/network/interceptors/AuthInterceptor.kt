@@ -9,13 +9,13 @@ class AuthInterceptor(
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val token = userPreferencesRepository.getToken()
+        val token = userPreferencesRepository.currentToken
 
         val request = chain.request()
 
         val newRequest = if (!token.isNullOrEmpty()) {
             request.newBuilder()
-                .header("Authorization", "Bearer $token")
+                .header("Authorization", "Bearer ${token}")
                 .build()
         } else {
             request

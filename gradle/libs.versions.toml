@@ -1,6 +1,7 @@
 [versions]
 agp = "8.12.3"
 converterScalars = "3.0.0"
+coreSplashscreen = "1.2.0"
 credentials = "1.5.0"
 datastorePreferences = "1.2.0"
 koinAndroid = "4.1.1"
@@ -30,9 +31,11 @@ navigationCompose = "2.9.6"
 googleid = "1.1.1"
 timber = "5.0.1"
 adsMobileSdk = "0.23.0-beta01"
+runtimeVersion = "1.10.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
@@ -70,6 +73,7 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 ads-mobile-sdk = { group = "com.google.android.libraries.ads.mobile.sdk", name = "ads-mobile-sdk", version.ref = "adsMobileSdk" }
+runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtimeVersion" }
 
 
 [plugins]
