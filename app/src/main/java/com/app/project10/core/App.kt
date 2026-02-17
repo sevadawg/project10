@@ -1,4 +1,4 @@
-package com.app.project10
+package com.app.project10.core
 
 import android.app.Application
 import com.app.project10.di.mainModule
@@ -10,7 +10,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         initKoin()
-        Timber.plant(Timber.DebugTree())
+        Timber.Forest.plant(Timber.DebugTree())
     }
 
     private fun initKoin() {
@@ -20,4 +20,3 @@ class App : Application() {
         }
     }
 }
-

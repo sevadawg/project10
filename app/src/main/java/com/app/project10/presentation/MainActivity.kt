@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.app.project10.presentation.auth.AuthState
 import com.app.project10.presentation.navigation.Navigation
 import com.app.project10.presentation.theme.Project10Theme
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -19,11 +20,10 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            val authState by authViewModel.state.collectAsStateWithLifecycle()
 
             Project10Theme {
                 Navigation(
-                    authState = authState,
+                    authState = AuthState.Authenticated,
                     onLoginSuccess = authViewModel::validateToken
                 )
             }

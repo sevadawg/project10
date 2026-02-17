@@ -79,7 +79,9 @@ private fun GamesList(games: List<Game>, onItemClicked: (Game) -> Unit) {
 
     LazyColumn(
         state = listState,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = dimens.md)
     ) {
         itemsIndexed(games) { index, game ->
             GameCard(
