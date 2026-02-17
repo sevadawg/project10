@@ -1,7 +1,8 @@
 package com.app.project10.data.repository.singlegame
 
-import com.app.project10.data.dto.game.GamesResponse
-import com.app.project10.network.services.singlegame.SingleGameNetworkService
+import com.app.project10.data.remote.api.singlegame.SingleGameNetworkService
+import com.app.project10.data.remote.dto.game.GamesResponse
+import com.app.project10.domain.repository.SingleGameRepository
 
 class SingleGameRepositoryImpl(private val singleGameNetworkService: SingleGameNetworkService) : SingleGameRepository {
     override suspend fun getGame(id: Int): GamesResponse {
@@ -9,5 +10,6 @@ class SingleGameRepositoryImpl(private val singleGameNetworkService: SingleGameN
         return response.body() ?: throw IllegalStateException("Game not found for id=$id")
     }
 }
+
 
 

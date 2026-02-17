@@ -1,7 +1,8 @@
 package com.app.project10.data.repository.games
 
-import com.app.project10.data.dto.game.Game
-import com.app.project10.network.services.games.GamesNetworkService
+import com.app.project10.data.remote.api.games.GamesNetworkService
+import com.app.project10.data.remote.dto.game.Game
+import com.app.project10.domain.repository.GamesRepository
 
 class GamesRepositoryImpl(
     private val gamesService: GamesNetworkService
@@ -10,4 +11,5 @@ class GamesRepositoryImpl(
         return gamesService.getGames(date).body()?.response.orEmpty()
     }
 }
+
 

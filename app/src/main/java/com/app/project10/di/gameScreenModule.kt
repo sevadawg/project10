@@ -1,10 +1,10 @@
 package com.app.project10.di
 
-import com.app.project10.data.repository.singlegame.SingleGameRepository
+import com.app.project10.data.remote.api.singlegame.SingleGameNetworkService
 import com.app.project10.data.repository.singlegame.SingleGameRepositoryImpl
 import com.app.project10.di.NetworkQualifiers.RapidApiRetrofit
-import com.app.project10.network.services.singlegame.SingleGameNetworkService
-import com.app.project10.ui.screens.game.GameViewModel
+import com.app.project10.domain.repository.SingleGameRepository
+import com.app.project10.presentation.screens.game.GameViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -19,4 +19,5 @@ val gameScreenModule = module {
         get<Retrofit>(named(RapidApiRetrofit)).create(SingleGameNetworkService::class.java)
     }
 }
+
 

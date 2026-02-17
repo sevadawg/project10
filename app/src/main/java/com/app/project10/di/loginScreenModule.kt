@@ -1,10 +1,10 @@
 package com.app.project10.di
 
-import com.app.project10.data.repository.login.LoginRepository
+import com.app.project10.data.remote.api.login.LoginService
 import com.app.project10.data.repository.login.LoginRepositoryImpl
 import com.app.project10.di.NetworkQualifiers.AuthenticatedRetrofit
-import com.app.project10.network.services.login.LoginService
-import com.app.project10.ui.screens.login.LoginViewModel
+import com.app.project10.domain.repository.LoginRepository
+import com.app.project10.presentation.screens.login.LoginViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -32,4 +32,5 @@ val loginScreenModule = module {
 
     viewModelOf(::LoginViewModel)
 }
+
 

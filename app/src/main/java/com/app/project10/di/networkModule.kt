@@ -1,12 +1,12 @@
 package com.app.project10.di
 
 import com.app.project10.BuildConfig
+import com.app.project10.data.remote.interceptor.AuthInterceptor
+import com.app.project10.data.remote.interceptor.RapidInterceptor
 import com.app.project10.di.NetworkQualifiers.AuthenticatedClient
 import com.app.project10.di.NetworkQualifiers.AuthenticatedRetrofit
 import com.app.project10.di.NetworkQualifiers.RapidApiClient
 import com.app.project10.di.NetworkQualifiers.RapidApiRetrofit
-import com.app.project10.network.interceptors.AuthInterceptor
-import com.app.project10.network.interceptors.RapidInterceptor
 import okhttp3.OkHttpClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -42,4 +42,5 @@ val networkModule = module {
             .build()
     }
 }
+
 

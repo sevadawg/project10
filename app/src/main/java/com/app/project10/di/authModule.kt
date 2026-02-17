@@ -1,12 +1,12 @@
 package com.app.project10.di
 
-import com.app.project10.data.repository.auth.AuthRepository
+import com.app.project10.data.local.preferences.UserPreferencesRepository
+import com.app.project10.data.remote.api.auth.AuthApiService
 import com.app.project10.data.repository.auth.AuthRepositoryImpl
-import com.app.project10.data.repository.userpreferences.UserPreferencesRepository
 import com.app.project10.di.NetworkQualifiers.AuthenticatedRetrofit
+import com.app.project10.domain.repository.AuthRepository
 import com.app.project10.domain.usecase.auth.ValidateTokenUseCase
-import com.app.project10.network.services.auth.AuthApiService
-import com.app.project10.ui.AuthViewModel
+import com.app.project10.presentation.AuthViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
@@ -16,7 +16,7 @@ import retrofit2.Retrofit
 val authModule = module {
     viewModelOf(::AuthViewModel)
 
-    factory<AuthRepository> { AuthRepositoryImpl(get()) }
+    factory<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     factory { ValidateTokenUseCase(get(), get()) }
     factory<AuthApiService> {
         get<Retrofit>(named(AuthenticatedRetrofit))
@@ -29,4 +29,5 @@ val authModule = module {
         )
     }
 }
+
 
