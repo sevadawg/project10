@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.project10.core.state.flowUiState
 import com.app.project10.data.dto.game.Game
-import com.app.project10.data.repository.single_game.SingleGameRepository
+import com.app.project10.data.repository.singlegame.SingleGameRepository
 import timber.log.Timber
 
 sealed interface GameScreenState {
@@ -50,3 +50,4 @@ class GameViewModel(private val gameRepository: SingleGameRepository) : ViewMode
         gameState.refresh()
     }
 }
+

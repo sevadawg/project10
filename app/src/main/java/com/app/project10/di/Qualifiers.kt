@@ -1,7 +1,9 @@
 package com.app.project10.di
 
-import org.koin.core.qualifier.named
+object NetworkQualifiers {
+    const val RapidApiClient = "RapidApiClient"
+    const val RapidApiRetrofit = "RapidApiRetrofit"
+    const val AuthenticatedClient = "AuthenticatedClient"
+    const val AuthenticatedRetrofit = "AuthenticatedRetrofit"
+}
 
-// Defines named qualifiers for Retrofit instances
-val LoginRetrofit = named("LoginRetrofit")
-val GamesRetrofit = named("GamesRetrofit")

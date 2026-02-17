@@ -1,6 +1,10 @@
 package com.app.project10.di
 
 import com.app.project10.BuildConfig
+import com.app.project10.di.NetworkQualifiers.AuthenticatedClient
+import com.app.project10.di.NetworkQualifiers.AuthenticatedRetrofit
+import com.app.project10.di.NetworkQualifiers.RapidApiClient
+import com.app.project10.di.NetworkQualifiers.RapidApiRetrofit
 import com.app.project10.network.interceptors.AuthInterceptor
 import com.app.project10.network.interceptors.RapidInterceptor
 import okhttp3.OkHttpClient
@@ -10,44 +14,32 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 val networkModule = module {
-
-    // --- Client for RapidAPI Services (Games, SingleGame) ---
-    single<OkHttpClient>(named("RapidApiClient")) {
+    single<OkHttpClient>(named(RapidApiClient)) {
         OkHttpClient.Builder()
             .addInterceptor(RapidInterceptor())
             .build()
     }
 
-    single<Retrofit>(named("RapidApiRetrofit")) {
+    single<Retrofit>(named(RapidApiRetrofit)) {
         Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
-            .client(get(named("RapidApiClient")))
+            .client(get(named(RapidApiClient)))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    // --- Default Client for Authenticated Services ---
-    single<OkHttpClient>(named("AuthenticatedClient")) {
+    single<OkHttpClient>(named(AuthenticatedClient)) {
         OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(get()))
             .build()
     }
 
-    single<Retrofit>(named("AuthenticatedRetrofit")) {
+    single<Retrofit>(named(AuthenticatedRetrofit)) {
         Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/") //  local Ktor
-            .client(get(named("AuthenticatedClient")))
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    // --- Default Retrofit Instance ---
-    // This Retrofit instance will be used by any service that doesn't request a named one.
-    // It will automatically use the default OkHttpClient with the AuthInterceptor.
-    single<Retrofit> {
-        Retrofit.Builder()
-            .client(get()) // Gets the default OkHttpClient
+            .client(get(named(AuthenticatedClient)))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 }
+

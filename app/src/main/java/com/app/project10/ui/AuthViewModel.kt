@@ -3,13 +3,15 @@ package com.app.project10.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.project10.core.state.flowUiState
-import com.app.project10.data.auth.AuthState
 import com.app.project10.data.repository.auth.AuthRepository
+import com.app.project10.domain.usecase.auth.ValidateTokenUseCase
+import com.app.project10.ui.auth.AuthState
 import kotlinx.coroutines.flow.StateFlow
 import timber.log.Timber
 
 class AuthViewModel(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val validateTokenUseCase: ValidateTokenUseCase
 ) : ViewModel() {
 
     private sealed interface AuthIntent {
@@ -27,7 +29,7 @@ class AuthViewModel(
         fetch { intent ->
             when (intent) {
                 is AuthIntent.Validate -> {
-                    val isTokenValid = authRepository.validateToken()
+                    val isTokenValid = validateTokenUseCase()
                     if (isTokenValid) AuthState.Authenticated else AuthState.Unauthenticated
                 }
 
@@ -63,3 +65,4 @@ class AuthViewModel(
         authState.update(AuthIntent.Logout)
     }
 }
+

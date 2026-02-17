@@ -1,4 +1,4 @@
-package com.app.project10.data.repository.user_preferences
+package com.app.project10.data.repository.userpreferences
 
 import android.content.Context
 import android.util.Base64
@@ -90,3 +90,4 @@ class UserPreferencesRepository(
         }
     }
 }
+

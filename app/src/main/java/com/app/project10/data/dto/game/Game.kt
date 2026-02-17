@@ -1,8 +1,6 @@
 package com.app.project10.data.dto.game
 
-import kotlinx.serialization.Serializable
 
-@Serializable
 data class Game(
     val id: Int = 0,
     val league: String? = "",
@@ -19,3 +17,4 @@ data class Game(
     val leadChanges: Int = 0,
     val nugget: String? = ""
 )
+

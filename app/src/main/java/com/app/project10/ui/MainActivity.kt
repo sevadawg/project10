@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.app.project10.data.auth.AuthState
+import com.app.project10.ui.auth.AuthState
 import com.app.project10.ui.navigation.Navigation
 import com.app.project10.ui.theme.Project10Theme
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -19,13 +19,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val splashScreen = installSplashScreen()
-        splashScreen.setKeepOnScreenCondition {
-            authViewModel.state.value == AuthState.Loading
-        }
+//        val splashScreen = installSplashScreen()
+//        splashScreen.setKeepOnScreenCondition {
+//            authViewModel.state.value == AuthState.Loading
+//        }
 
         enableEdgeToEdge()
         setContent {
+            val authState by authViewModel.state.collectAsStateWithLifecycle()
+
             Project10Theme {
                 Navigation(
                     authState = AuthState.Authenticated,
@@ -35,3 +37,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+

@@ -17,7 +17,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.project10.BuildConfig
 import com.app.project10.R
 import com.app.project10.ui.theme.Dimens
@@ -47,7 +47,7 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit
 ) {
     val dimens = Dimens.current
-    val loginState by viewModel.state.collectAsState()
+    val loginState by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val credentialManager = remember { CredentialManager.create(context) }
@@ -174,3 +174,4 @@ private fun GoogleSignInButton(
 private fun LoginScreenPreview() {
     LoginContent(onSignInClick = {})
 }
+

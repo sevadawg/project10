@@ -18,3 +18,4 @@ fun SavedScreen() {
         AppSectionTitle(title = "Saved Games")
     }
 }
+

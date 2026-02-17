@@ -1,6 +1,6 @@
 package com.app.project10.network.interceptors
 
-import com.app.project10.data.repository.user_preferences.UserPreferencesRepository
+import com.app.project10.data.repository.userpreferences.UserPreferencesRepository
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -24,3 +24,4 @@ class AuthInterceptor(
         return chain.proceed(newRequest)
     }
 }
+

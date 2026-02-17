@@ -20,3 +20,4 @@ class FlowUiStateController<S, R>(
         return refresh.tryEmit(Unit)
     }
 }
+

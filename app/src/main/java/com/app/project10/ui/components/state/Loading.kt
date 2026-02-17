@@ -7,3 +7,4 @@ import com.app.project10.ui.components.common.AppCenteredLoading
 fun Loading() {
     AppCenteredLoading()
 }
+

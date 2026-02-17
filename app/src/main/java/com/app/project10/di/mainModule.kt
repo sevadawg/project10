@@ -7,3 +7,4 @@ val mainModule = listOf(
     gameScreenModule,
     authModule
 )
+

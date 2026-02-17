@@ -12,9 +12,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
-import com.app.project10.data.auth.AuthState
+import com.app.project10.ui.auth.AuthState
 import com.app.project10.ui.screens.game.GameScreen
-import com.app.project10.ui.screens.home.MainScreen
+import com.app.project10.ui.screens.home.HomeScreen
 import com.app.project10.ui.screens.login.LoginScreen
 import com.app.project10.ui.screens.saved.SavedScreen
 import com.app.project10.ui.theme.Dimens
@@ -65,7 +65,7 @@ fun Navigation(
             onBack = { backStack.popBack() },
             entryProvider = entryProvider {
                 entry<Home> {
-                    MainScreen(innerPadding = paddingValues) { game ->
+                    HomeScreen(innerPadding = paddingValues) { game ->
                         backStack.add(GameStatistics(game))
                     }
                 }
@@ -86,3 +86,4 @@ fun Navigation(
         )
     }
 }
+

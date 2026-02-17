@@ -26,3 +26,4 @@ class FlowUiStateBuilder<S, R> {
         _initialState = block()
     }
 }
+

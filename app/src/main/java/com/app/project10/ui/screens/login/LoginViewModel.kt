@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.project10.core.state.flowUiState
 import com.app.project10.data.repository.login.LoginRepository
-import com.app.project10.data.repository.user_preferences.UserPreferencesRepository
+import com.app.project10.data.repository.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.StateFlow
 import timber.log.Timber
 
@@ -31,8 +31,11 @@ class LoginViewModel(
                     LoginScreenState.Idle
                 } else {
                     val response = loginRepository.login(idToken)
-                    val jwt = response.jwt ?: ""
-                    userPreferencesRepository.saveAuthToken(jwt.trim())
+                    val jwt = response.jwt?.trim().orEmpty()
+                    if (jwt.isBlank()) {
+                        throw IllegalStateException("Empty JWT token received from login API")
+                    }
+                    userPreferencesRepository.saveAuthToken(jwt)
                     LoginScreenState.Success
                 }
             }
@@ -51,3 +54,4 @@ class LoginViewModel(
         loginState.update(idToken)
     }
 }
+

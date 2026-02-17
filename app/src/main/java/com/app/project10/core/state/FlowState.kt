@@ -57,3 +57,4 @@ fun <S, R> flowUiState(
 
     return FlowUiStateController(input, refresh, state)
 }
+

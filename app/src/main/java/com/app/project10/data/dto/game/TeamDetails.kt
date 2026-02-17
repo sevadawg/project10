@@ -1,8 +1,6 @@
 package com.app.project10.data.dto.game
 
-import kotlinx.serialization.Serializable
 
-@Serializable
 data class TeamDetails(
     val id: Int = 0,
     val name: String? = "",
@@ -10,3 +8,4 @@ data class TeamDetails(
     val code: String? = "",
     val logo: String? = ""
 )
+

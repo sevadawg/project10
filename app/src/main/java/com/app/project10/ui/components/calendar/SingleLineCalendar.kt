@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import com.app.project10.R
-import com.app.project10.core.utils.TimeUtils.todayDateNow
+import com.app.project10.core.utils.DateTimeUtils.todayDate
 import com.app.project10.ui.theme.Dimens
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -34,7 +34,7 @@ import java.util.Locale
 @Composable
 fun SingleLineCalendar(modifier: Modifier = Modifier, onItemSelected: (LocalDate) -> Unit) {
     val dimens = Dimens.current
-    val today = todayDateNow
+    val today = todayDate
     val startOfWeek = today.minusDays((today.dayOfWeek.value - 1).toLong())
     val currentWeekStart = remember { mutableStateOf(startOfWeek) }
 
@@ -149,3 +149,4 @@ private fun CalendarItem(itemTitle: LocalDate, onItemSelected: (LocalDate) -> Un
         )
     }
 }
+

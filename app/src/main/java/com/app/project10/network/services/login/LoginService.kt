@@ -9,3 +9,4 @@ interface LoginService {
     @POST("/auth/google")
     suspend fun login(@Body request: GoogleLoginRequest): LoginResponse
 }
+

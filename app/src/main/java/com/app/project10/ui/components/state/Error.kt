@@ -7,3 +7,4 @@ import com.app.project10.ui.components.common.AppCenteredError
 fun Error(onRefresh: () -> Unit) {
     AppCenteredError(message = "Something went wrong", onRefresh = onRefresh)
 }
+

@@ -9,3 +9,4 @@ interface GamesNetworkService {
     @GET("games")
     suspend fun getGames(@Query("date") date: String): Response<GamesResponse>
 }
+

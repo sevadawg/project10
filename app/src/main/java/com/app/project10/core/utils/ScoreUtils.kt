@@ -7,3 +7,4 @@ data class TeamStats(
     val fgPct: Int = 0,
     val threes: Int = 0
 )
+

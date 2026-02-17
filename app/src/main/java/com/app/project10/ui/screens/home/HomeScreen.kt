@@ -15,10 +15,10 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.project10.data.dto.game.Game
 import com.app.project10.ui.components.calendar.SingleLineCalendar
 import com.app.project10.ui.components.common.AppCard
@@ -30,13 +30,13 @@ import com.app.project10.ui.theme.Dimens
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun MainScreen(
-    viewModel: MainScreenViewModel = koinViewModel(),
+fun HomeScreen(
+    viewModel: HomeViewModel = koinViewModel(),
     innerPadding: PaddingValues,
     onItemClicked: (Game) -> Unit
 ) {
     val dimens = Dimens.current
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
@@ -48,15 +48,15 @@ fun MainScreen(
             viewModel.onDateChanged(date)
         }
         when (state) {
-            is MainScreenState.DisplayingGames -> Content({
-                val games = (state as MainScreenState.DisplayingGames).games
+            is HomeScreenState.DisplayingGames -> Content({
+                val games = (state as HomeScreenState.DisplayingGames).games
                 GamesList(games = games) { game ->
                     onItemClicked(game)
                 }
             })
 
-            is MainScreenState.Loading -> Loading()
-            is MainScreenState.DisplayingError -> Error(
+            is HomeScreenState.Loading -> Loading()
+            is HomeScreenState.DisplayingError -> Error(
                 onRefresh = viewModel::onRefresh
             )
         }
@@ -84,7 +84,6 @@ private fun GamesList(games: List<Game>, onItemClicked: (Game) -> Unit) {
         itemsIndexed(games) { index, game ->
             GameCard(
                 modifier = Modifier.padding(bottom = dimens.xs),
-                itemIndex = index,
                 leftTeamName = game.teams.home.name ?: "Team A",
                 rightTeamName = game.teams.visitors.name ?: "Team B",
                 leftScore = game.scores.home.points,
@@ -101,7 +100,6 @@ private fun GamesList(games: List<Game>, onItemClicked: (Game) -> Unit) {
 @Composable
 fun GameCard(
     modifier: Modifier = Modifier,
-    itemIndex: Int,
     leftTeamName: String = "Team A",
     rightTeamName: String = "Team B",
     leftScore: Int,
@@ -179,3 +177,4 @@ fun GameCard(
         }
     }
 }
+

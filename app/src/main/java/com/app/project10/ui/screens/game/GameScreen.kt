@@ -341,3 +341,4 @@ private fun buildPeriodRows(game: Game): List<ComparisonRowUi> {
         )
     }
 }
+
