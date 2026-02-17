@@ -28,6 +28,10 @@ class HomeViewModel(private val gamesRepository: GamesRepository) : ViewModel() 
             HomeScreenState.DisplayingGames(games, date)
         }
 
+        loading {
+            HomeScreenState.Loading
+        }
+
         onError { e ->
             Timber.e(e)
             HomeScreenState.DisplayingError(e.message ?: "Unknown error")
@@ -37,13 +41,17 @@ class HomeViewModel(private val gamesRepository: GamesRepository) : ViewModel() 
     val state = gamesState.state
 
     fun onDateChanged(newDate: LocalDate) {
-        gamesState.update(newDate.toString())
+        val newInput = newDate.toString()
+        if (gamesState.currentInput == newInput) {
+            gamesState.refresh()
+            return
+        }
+        gamesState.update(newInput)
     }
 
     fun onRefresh() {
         gamesState.refresh()
     }
 }
-
 
 

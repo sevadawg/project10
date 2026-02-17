@@ -60,7 +60,6 @@ fun SingleLineCalendar(
         modifier = modifier
             .clip(RoundedCornerShape(dimens.cardCorner))
             .background(colors.containerColor)
-            .padding(dimens.xs)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -117,7 +116,7 @@ fun SingleLineCalendar(
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = dimens.xs),
-            horizontalArrangement = Arrangement.spacedBy(dimens.xxs, Alignment.CenterHorizontally),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             items(
@@ -195,5 +194,4 @@ private fun CalendarItem(
         )
     }
 }
-
 

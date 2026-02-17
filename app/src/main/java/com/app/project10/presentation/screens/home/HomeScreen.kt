@@ -47,6 +47,7 @@ fun HomeScreen(
         SingleLineCalendar { date ->
             viewModel.onDateChanged(date)
         }
+
         when (state) {
             is HomeScreenState.DisplayingGames -> Content({
                 val games = (state as HomeScreenState.DisplayingGames).games
