@@ -27,9 +27,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Project10Theme {
-                val state by authViewModel.state.collectAsStateWithLifecycle()
                 Navigation(
-                    authState = state,
+                    authState = AuthState.Authenticated,
                     onLoginSuccess = authViewModel::validateToken
                 )
             }

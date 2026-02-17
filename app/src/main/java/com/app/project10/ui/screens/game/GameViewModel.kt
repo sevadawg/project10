@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.app.project10.core.state.flowUiState
 import com.app.project10.data.dto.game.Game
 import com.app.project10.data.repository.single_game.SingleGameRepository
-import kotlinx.coroutines.flow.MutableStateFlow
 import timber.log.Timber
 
 sealed interface GameScreenState {
@@ -16,18 +15,19 @@ sealed interface GameScreenState {
 
 class GameViewModel(private val gameRepository: SingleGameRepository) : ViewModel() {
 
-    private val gameIdFlow = MutableStateFlow<Int?>(null)
-
-    val gameState = flowUiState(
+    private val gameState = flowUiState<Int?, GameScreenState>(
         scope = viewModelScope,
-        initialInput = gameIdFlow.value,
+        initialInput = null,
         builder = {
             initial { GameScreenState.Loading }
 
-            debounce(300)
-
             fetch { gameId ->
-                val game = gameRepository.getGame(gameId ?: -1)
+                val safeGameId = gameId
+                    ?.takeIf { it > 0 }
+                    ?: return@fetch GameScreenState.Loading
+
+                val game = gameRepository.getGame(safeGameId)
+
                 GameScreenState.DisplayingGame(game.toGameResponse())
             }
 
@@ -41,11 +41,12 @@ class GameViewModel(private val gameRepository: SingleGameRepository) : ViewMode
     val state = gameState.state
 
     fun setGameId(id: Int) {
+        if (id <= 0) return
         gameState.update(id)
     }
 
-
     fun onRefresh() {
+        if ((gameState.currentInput ?: -1) <= 0) return
         gameState.refresh()
     }
 }

@@ -1,8 +1,6 @@
 package com.app.project10.core.state
 
 class FlowUiStateBuilder<S, R> {
-    internal var debounceMs: Long = 0
-
     private var _fetcher: (suspend (S) -> R)? = null
     private var _errorMapper: ((Throwable) -> R)? = null
     private var _initialState: R? = null
@@ -15,10 +13,6 @@ class FlowUiStateBuilder<S, R> {
 
     val initialState: R
         get() = requireNotNull(_initialState) { "${javaClass.name}\ninitial { } must be provided" }
-
-    fun debounce(ms: Long) {
-        debounceMs = ms
-    }
 
     fun fetch(block: suspend (S) -> R) {
         _fetcher = block

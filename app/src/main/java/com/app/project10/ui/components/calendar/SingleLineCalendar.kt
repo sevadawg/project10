@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -23,18 +24,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.app.project10.R
 import com.app.project10.core.utils.TimeUtils.todayDateNow
-import com.app.project10.ui.theme.Pink80
-import com.app.project10.ui.theme.PurpleGrey80
+import com.app.project10.ui.theme.Dimens
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @Composable
 fun SingleLineCalendar(modifier: Modifier = Modifier, onItemSelected: (LocalDate) -> Unit) {
+    val dimens = Dimens.current
     val today = todayDateNow
     val startOfWeek = today.minusDays((today.dayOfWeek.value - 1).toLong())
     val currentWeekStart = remember { mutableStateOf(startOfWeek) }
@@ -53,10 +52,9 @@ fun SingleLineCalendar(modifier: Modifier = Modifier, onItemSelected: (LocalDate
 
     Column(
         modifier = modifier
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(PurpleGrey80)
-            .padding(8.dp)
+            .clip(RoundedCornerShape(dimens.cardCorner))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(dimens.xs)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -64,13 +62,14 @@ fun SingleLineCalendar(modifier: Modifier = Modifier, onItemSelected: (LocalDate
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .fillMaxWidth()
-                .padding(8.dp)
-                .height(48.dp)
+                .padding(dimens.xs)
+                .height(dimens.calendarHeaderHeight)
         ) {
             Text(
                 modifier = Modifier
                     .weight(1f),
-                text = "$formattedFirstDate - \n$formattedLastDate"
+                text = "$formattedFirstDate - \n$formattedLastDate",
+                style = MaterialTheme.typography.bodyMedium
             )
             Row(
                 modifier = Modifier.weight(1f),
@@ -79,30 +78,31 @@ fun SingleLineCalendar(modifier: Modifier = Modifier, onItemSelected: (LocalDate
             ) {
                 IconButton(
                     modifier = Modifier
-                        .background(Pink80, CircleShape)
-                        .size(32.dp),
+                        .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+                        .size(dimens.calendarNavButton),
                     onClick = {
                         currentWeekStart.value = currentWeekStart.value.minusWeeks(1)
                     }) {
                     Icon(
-                        modifier = Modifier.size(16.dp),
+                        modifier = Modifier.size(dimens.calendarNavIcon),
                         painter = painterResource(R.drawable.ic_arrow_back),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
                 IconButton(
                     modifier = Modifier
-                        .padding(start = 8.dp)
-                        .background(Pink80, CircleShape)
-                        .size(32.dp), onClick = {
+                        .padding(start = dimens.xs)
+                        .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+                        .size(dimens.calendarNavButton), onClick = {
                         currentWeekStart.value = currentWeekStart.value.plusWeeks(1)
                     }) {
                     Icon(
                         modifier = Modifier
-                            .size(16.dp)
-                            .background(Pink80),
+                            .size(dimens.calendarNavIcon),
                         painter = painterResource(R.drawable.ic_arrow_forward),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
             }
@@ -121,29 +121,31 @@ fun SingleLineCalendar(modifier: Modifier = Modifier, onItemSelected: (LocalDate
 
 @Composable
 private fun CalendarItem(itemTitle: LocalDate, onItemSelected: (LocalDate) -> Unit) {
+    val dimens = Dimens.current
 
     val dayName = itemTitle.dayOfWeek.name.slice(0..2)
     val dayNumber = itemTitle.dayOfMonth.toString()
 
     Column(
         modifier = Modifier
-            .padding(4.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(Pink80)
-            .padding(4.dp)
+            .padding(dimens.xxs)
+            .clip(RoundedCornerShape(dimens.xs))
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .padding(dimens.xxs)
             .clickable(onClick = {
                 onItemSelected.invoke(itemTitle)
             })
-            .size(height = 48.dp, width = 35.dp),
+            .size(height = dimens.calendarDayHeight, width = dimens.calendarDayWidth),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            fontSize = 12.sp,
+            style = MaterialTheme.typography.bodySmall,
             text = dayName,
         )
         Text(
-            text = dayNumber
+            text = dayNumber,
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }

@@ -9,11 +9,14 @@ class FlowUiStateController<S, R>(
     private val refresh: MutableSharedFlow<Unit>,
     val state: StateFlow<R>
 ) {
+    val currentInput: S
+        get() = input.value
+
     fun update(value: S) {
         input.value = value
     }
 
-    fun refresh() {
-        refresh.tryEmit(Unit)
+    fun refresh(): Boolean {
+        return refresh.tryEmit(Unit)
     }
 }

@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
@@ -47,6 +46,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
     onLoginSuccess: () -> Unit
 ) {
+    val dimens = Dimens.current
     val loginState by viewModel.state.collectAsState()
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -59,7 +59,7 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(Dimens.PaddingNormal),
+                .padding(dimens.md),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -108,7 +108,7 @@ fun LoginScreen(
                 }
                 is LoginScreenState.Error -> {
                     LoginContent(onSignInClick = onSignInClick)
-                    Spacer(modifier = Modifier.height(Dimens.SpacerNormal))
+                    Spacer(modifier = Modifier.height(dimens.md))
                     Text(
                         text = state.message,
                         color = MaterialTheme.colorScheme.error
@@ -121,17 +121,17 @@ fun LoginScreen(
 
 @Composable
 private fun LoginContent(onSignInClick: () -> Unit) {
+    val dimens = Dimens.current
     Text(
         text = "Welcome Back",
-        style = MaterialTheme.typography.headlineLarge,
-        fontWeight = FontWeight.Bold
+        style = MaterialTheme.typography.headlineLarge
     )
     Text(
         text = "Sign in to continue",
         style = MaterialTheme.typography.bodyLarge,
-        color = Color.Gray
+        color = MaterialTheme.colorScheme.onSurfaceVariant
     )
-    Spacer(modifier = Modifier.height(Dimens.SpacerLarge))
+    Spacer(modifier = Modifier.height(dimens.xxl))
     GoogleSignInButton(
         onClick = onSignInClick
     )
@@ -141,29 +141,30 @@ private fun LoginContent(onSignInClick: () -> Unit) {
 private fun GoogleSignInButton(
     onClick: () -> Unit
 ) {
+    val dimens = Dimens.current
     Button(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = Dimens.PaddingHorizontal),
+            .padding(horizontal = dimens.md),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.White,
-            contentColor = Color.Black
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
         ),
         elevation = ButtonDefaults.buttonElevation(
-            defaultElevation = Dimens.ButtonElevation
+            defaultElevation = dimens.buttonElevation
         )
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_1),
             contentDescription = "Google sign-in button",
-            modifier = Modifier.size(Dimens.IconSize),
+            modifier = Modifier.size(dimens.icon),
             tint = Color.Unspecified // Important to keep original colors of the logo
         )
         Text(
             text = "Sign in with Google",
-            modifier = Modifier.padding(start = Dimens.IconPadding),
-            fontWeight = FontWeight.Medium
+            modifier = Modifier.padding(start = dimens.sm),
+            style = MaterialTheme.typography.titleMedium
         )
     }
 }

@@ -12,17 +12,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.app.project10.data.dto.game.Game
 import com.app.project10.ui.components.calendar.SingleLineCalendar
+import com.app.project10.ui.components.common.AppCard
+import com.app.project10.ui.components.common.AppSectionTitle
 import com.app.project10.ui.components.state.Content
 import com.app.project10.ui.components.state.Error
 import com.app.project10.ui.components.state.Loading
@@ -35,10 +35,13 @@ fun MainScreen(
     innerPadding: PaddingValues,
     onItemClicked: (Game) -> Unit
 ) {
+    val dimens = Dimens.current
     val state by viewModel.state.collectAsState()
 
     Column(
-        modifier = Modifier.padding(innerPadding)
+        modifier = Modifier
+            .padding(innerPadding)
+            .padding(horizontal = dimens.md)
     ) {
         Header()
         SingleLineCalendar { date ->
@@ -62,22 +65,25 @@ fun MainScreen(
 
 @Composable
 private fun Header() {
-    Text(text = "NBA Now")
+    val dimens = Dimens.current
+    AppSectionTitle(
+        title = "NBA Now",
+        modifier = Modifier.padding(vertical = dimens.md)
+    )
 }
 
 @Composable
 private fun GamesList(games: List<Game>, onItemClicked: (Game) -> Unit) {
+    val dimens = Dimens.current
     val listState = rememberLazyListState()
 
     LazyColumn(
         state = listState,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = Dimens.PaddingHorizontal)
+        modifier = Modifier.fillMaxSize()
     ) {
         itemsIndexed(games) { index, game ->
             GameCard(
-                modifier = Modifier.padding(bottom = Dimens.PaddingSmall),
+                modifier = Modifier.padding(bottom = dimens.xs),
                 itemIndex = index,
                 leftTeamName = game.teams.home.name ?: "Team A",
                 rightTeamName = game.teams.visitors.name ?: "Team B",
@@ -104,17 +110,17 @@ fun GameCard(
     gameStatus: String,
     onClick: () -> Unit
 ) {
-    Card(
+    val dimens = Dimens.current
+    AppCard(
         modifier = modifier
             .fillMaxWidth()
-            .height(Dimens.GameCardHeight),
-        shape = RoundedCornerShape(Dimens.CardCornerRadius),
+            .height(dimens.listCardHeight),
         onClick = onClick
     ) {
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(start = Dimens.PaddingNormal, end = 0.dp)
+                .padding(horizontal = dimens.md, vertical = dimens.xs)
         ) {
             Column(
                 modifier = Modifier
@@ -125,26 +131,34 @@ fun GameCard(
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         modifier = Modifier
-                            .height(Dimens.TeamNameRowHeight)
-                            .weight(4f), text = leftTeamName
+                            .height(dimens.teamRowHeight)
+                            .weight(4f),
+                        text = leftTeamName,
+                        style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
                         modifier = Modifier
-                            .height(Dimens.TeamNameRowHeight)
-                            .weight(1f), text = leftScore.toString()
+                            .height(dimens.teamRowHeight)
+                            .weight(1f),
+                        text = leftScore.toString(),
+                        style = MaterialTheme.typography.titleMedium
                     )
                 }
-                Spacer(modifier = Modifier.height(Dimens.SpacerSmall))
+                Spacer(modifier = Modifier.height(dimens.xs))
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         modifier = Modifier
-                            .height(Dimens.TeamNameRowHeight)
-                            .weight(4f), text = rightTeamName
+                            .height(dimens.teamRowHeight)
+                            .weight(4f),
+                        text = rightTeamName,
+                        style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
                         modifier = Modifier
-                            .height(Dimens.TeamNameRowHeight)
-                            .weight(1f), text = rightScore.toString()
+                            .height(dimens.teamRowHeight)
+                            .weight(1f),
+                        text = rightScore.toString(),
+                        style = MaterialTheme.typography.titleMedium
                     )
                 }
             }
@@ -155,8 +169,12 @@ fun GameCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = gameTime)
-                Text(text = gameStatus)
+                Text(text = gameTime, style = MaterialTheme.typography.bodySmall)
+                Text(
+                    text = gameStatus,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }

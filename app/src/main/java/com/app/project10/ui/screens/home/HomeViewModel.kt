@@ -23,8 +23,6 @@ class MainScreenViewModel(private val gamesRepository: GamesRepository) : ViewMo
     ) {
         initial { MainScreenState.Loading }
 
-        debounce(300)
-
         fetch { date ->
             val games = gamesRepository.getGames(date)
             MainScreenState.DisplayingGames(games, date)

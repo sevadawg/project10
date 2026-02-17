@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.app.project10.core.state.flowUiState
 import com.app.project10.data.repository.login.LoginRepository
 import com.app.project10.data.repository.user_preferences.UserPreferencesRepository
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import timber.log.Timber
 
@@ -21,18 +20,14 @@ class LoginViewModel(
     private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
-    private val idTokenFlow = MutableStateFlow<String?>(null)
-
-    val loginState = flowUiState(
+    private val loginState = flowUiState(
         scope = viewModelScope,
-        initialInput = idTokenFlow.value,
+        initialInput = "",
         builder = {
             initial { LoginScreenState.Idle }
 
-            debounce(100)
-
             fetch { idToken ->
-                if (idToken.isNullOrEmpty()) {
+                if (idToken.isBlank()) {
                     LoginScreenState.Idle
                 } else {
                     val response = loginRepository.login(idToken)
@@ -48,6 +43,7 @@ class LoginViewModel(
             }
         }
     )
+
 
     val state: StateFlow<LoginScreenState> = loginState.state
 
