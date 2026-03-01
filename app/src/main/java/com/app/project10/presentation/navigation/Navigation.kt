@@ -16,7 +16,7 @@ import com.app.project10.presentation.auth.AuthState
 import com.app.project10.presentation.screens.game.GameScreen
 import com.app.project10.presentation.screens.home.HomeScreen
 import com.app.project10.presentation.screens.login.LoginScreen
-import com.app.project10.presentation.screens.saved.SavedScreen
+import com.app.project10.presentation.screens.standings.StandingsScreen
 import com.app.project10.presentation.theme.Dimens
 
 @Composable
@@ -69,7 +69,7 @@ fun Navigation(
                         backStack.add(GameStatistics(game))
                     }
                 }
-                entry<Saved> { SavedScreen() }
+                entry<Standings> { StandingsScreen(innerPadding = paddingValues) }
                 entry<GameStatistics> { params ->
                     GameScreen(
                         game = params.game,

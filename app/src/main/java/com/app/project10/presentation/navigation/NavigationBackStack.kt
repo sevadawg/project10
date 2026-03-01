@@ -17,7 +17,7 @@ object Home : TopLevelRoute {
         get() = R.drawable.ic_1
 }
 
-object Saved : TopLevelRoute {
+object Standings : TopLevelRoute {
     override val icon: Int
         get() = R.drawable.ic_20
 }
@@ -26,7 +26,7 @@ data class GameStatistics(val game: Game)
 
 data object Login
 
-val TOP_LEVEL_ROUTES: List<TopLevelRoute> = listOf(Home, Saved)
+val TOP_LEVEL_ROUTES: List<TopLevelRoute> = listOf(Home, Standings)
 
 class TopLevelBackStack(
     startTopLevel: TopLevelRoute

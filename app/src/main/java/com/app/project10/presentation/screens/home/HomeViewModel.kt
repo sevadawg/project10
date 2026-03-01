@@ -6,6 +6,8 @@ import com.app.project10.core.state.flowUiState
 import com.app.project10.core.utils.DateTimeUtils.todayDateString
 import com.app.project10.data.remote.dto.game.Game
 import com.app.project10.domain.repository.GamesRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.LocalDate
 
@@ -24,8 +26,10 @@ class HomeViewModel(private val gamesRepository: GamesRepository) : ViewModel() 
         initial { HomeScreenState.Loading }
 
         fetch { date ->
-            val games = gamesRepository.getGames(date)
-            HomeScreenState.DisplayingGames(games, date)
+            withContext(Dispatchers.IO) {
+                val games = gamesRepository.getGames(date)
+                HomeScreenState.DisplayingGames(games, date)
+            }
         }
 
         loading {
