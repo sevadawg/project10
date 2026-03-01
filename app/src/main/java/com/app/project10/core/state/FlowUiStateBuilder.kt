@@ -4,6 +4,7 @@ class FlowUiStateBuilder<S, R> {
     private var _fetcher: (suspend (S) -> R)? = null
     private var _errorMapper: ((Throwable) -> R)? = null
     private var _initialState: R? = null
+    private var _loadingState: R? = null
 
     val fetcher: suspend (S) -> R
         get() = requireNotNull(_fetcher) { "${javaClass.name}\nfetch { } must be provided" }
@@ -13,6 +14,10 @@ class FlowUiStateBuilder<S, R> {
 
     val initialState: R
         get() = requireNotNull(_initialState) { "${javaClass.name}\ninitial { } must be provided" }
+
+    val loadingState: R
+        get() = _loadingState ?: initialState
+
 
     fun fetch(block: suspend (S) -> R) {
         _fetcher = block
@@ -25,4 +30,9 @@ class FlowUiStateBuilder<S, R> {
     fun initial(block: () -> R) {
         _initialState = block()
     }
+
+    fun loading(block: () -> R) {
+        _loadingState = block()
+    }
 }
+

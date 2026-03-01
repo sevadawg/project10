@@ -1,22 +1,21 @@
 package com.app.project10.data.repository.auth
 
-import com.app.project10.data.repository.user_preferences.UserPreferencesRepository
-import com.app.project10.network.services.auth.AuthApiService
+import com.app.project10.data.local.preferences.UserPreferencesRepository
+import com.app.project10.data.remote.api.auth.AuthApiService
+import com.app.project10.domain.repository.AuthRepository
 import timber.log.Timber
+import kotlin.coroutines.cancellation.CancellationException
 
 class AuthRepositoryImpl(
     private val authApiService: AuthApiService,
     private val userPreferencesRepository: UserPreferencesRepository
 ) : AuthRepository {
 
+    override suspend fun login(user: String, pass: String): Boolean {
+        return true
+    }
+
     override suspend fun validateToken(): Boolean {
-        val token = userPreferencesRepository.getToken()
-
-        if (token.isNullOrEmpty()) {
-            Timber.d("No token found in local storage.")
-            return false
-        }
-
         return try {
             val isTokenValid = authApiService.verifyToken().isValid
 
@@ -28,17 +27,17 @@ class AuthRepositoryImpl(
                 clearToken()
                 false
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Timber.e(e, "Token validation failed due to a network error.")
             false
         }
     }
 
-    override suspend fun login(user: String, pass: String): Boolean {
-        return true
-    }
-
     override suspend fun clearToken() {
         userPreferencesRepository.clearAuthToken()
     }
 }
+
+

@@ -7,8 +7,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.stateIn
 import kotlin.coroutines.cancellation.CancellationException
@@ -38,15 +39,24 @@ fun <S, R> flowUiState(
         input.map<S, FlowTrigger<S>> { FlowTrigger.Input(it) },
         refresh.map<Unit, FlowTrigger<S>> { FlowTrigger.Refresh }
     )
-        .mapLatest { trigger ->
-            try {
-                when (trigger) {
-                    is FlowTrigger.Input -> flowBuilder.fetcher(trigger.value)
-                    FlowTrigger.Refresh -> flowBuilder.fetcher(input.value)
+        .flatMapLatest { trigger ->
+            flow {
+                try {
+                    when (trigger) {
+                        is FlowTrigger.Input -> {
+                            emit(flowBuilder.loadingState)
+                            emit(flowBuilder.fetcher(trigger.value))
+                        }
+
+                        FlowTrigger.Refresh -> {
+                            emit(flowBuilder.loadingState)
+                            emit(flowBuilder.fetcher(input.value))
+                        }
+                    }
+                } catch (e: Throwable) {
+                    if (e is CancellationException) throw e
+                    emit(flowBuilder.errorMapper(e))
                 }
-            } catch (e: Throwable) {
-                if (e is CancellationException) throw e
-                flowBuilder.errorMapper(e)
             }
         }
         .stateIn(

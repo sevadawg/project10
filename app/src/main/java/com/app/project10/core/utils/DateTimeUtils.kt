@@ -2,7 +2,12 @@ package com.app.project10.core.utils
 
 import java.time.LocalDate
 
-object TimeUtils {
-    var todayDate = LocalDate.now().toString()
-    val todayDateNow = LocalDate.now()
+object DateTimeUtils {
+    val todayDateString: String
+        get() = LocalDate.now().toString()
+
+    val todayDate: LocalDate
+        get() = LocalDate.now()
 }
+
+

@@ -1,9 +1,10 @@
 package com.app.project10.di
 
-import com.app.project10.data.repository.games.GamesRepository
+import com.app.project10.data.remote.api.games.GamesNetworkService
 import com.app.project10.data.repository.games.GamesRepositoryImpl
-import com.app.project10.network.services.games.GamesNetworkService
-import com.app.project10.ui.screens.home.MainScreenViewModel
+import com.app.project10.di.NetworkQualifiers.RapidApiRetrofit
+import com.app.project10.domain.repository.GamesRepository
+import com.app.project10.presentation.screens.home.HomeViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -12,9 +13,11 @@ import retrofit2.Retrofit
 val homeScreenModule = module {
     factory<GamesRepository> { GamesRepositoryImpl(get()) }
 
-    viewModelOf(::MainScreenViewModel)
+    viewModelOf(::HomeViewModel)
 
     factory {
-        get<Retrofit>(named("RapidApiRetrofit")).create(GamesNetworkService::class.java)
+        get<Retrofit>(named(RapidApiRetrofit)).create(GamesNetworkService::class.java)
     }
 }
+
+
